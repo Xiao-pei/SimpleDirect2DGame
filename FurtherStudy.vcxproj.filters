@@ -21,16 +21,10 @@
     <ClInclude Include="stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Saferelease.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Gametry.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="GameLevel.h">
@@ -43,6 +37,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TestLevel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -61,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="Testlevel.cpp">
       <Filter>源文件\GameLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

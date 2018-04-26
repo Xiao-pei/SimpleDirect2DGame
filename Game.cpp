@@ -19,109 +19,16 @@ void Game::LoadLevel()
 	currentLevel = new Testlevel(m_pRenderTarget);
 }
 
-HRESULT Game::OnRender()
+void Game::OnRender()
 {
-	HRESULT hr = CreateDeviceResources();
-	if(SUCCEEDED(hr))
-	{
-		/*BitmapLoader* bitmap_loader = new BitmapLoader(m_pRenderTarget);
-		ID2D1Bitmap* bmp=bitmap_loader->getBitmap(L"B.jpg");
-		
-		D2D1_SIZE_F size = bmp->GetSize();*/
-		// Draw bitmap
-		LoadLevel();
 		currentLevel->Load();
-		m_pRenderTarget->BeginDraw();
 		currentLevel->OnRender();
-		hr = m_pRenderTarget->EndDraw();
-	}
-	if (hr == D2DERR_RECREATE_TARGET)
-	{
-		hr = S_OK;
-		DiscardDeviceResources();
-	}
-
-	return E_NOTIMPL;
 }
 
-LRESULT Game::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+void Game::Update()
 {
-	LRESULT result = 0;
-
-	if (message == WM_CREATE)
-	{
-		LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
-		Game *pGame = (Game *)pcs->lpCreateParams;
-
-		::SetWindowLongPtrW(
-			hwnd,
-			GWLP_USERDATA,
-			PtrToUlong(pGame)
-		);
-
-		result = 1;
-	}
-	else
-	{
-		Game *pGame = reinterpret_cast<Game *>(static_cast<LONG_PTR>(
-			::GetWindowLongPtrW(
-				hwnd,
-				GWLP_USERDATA
-			)));
-
-		bool wasHandled = false;
-
-		if (pGame)
-		{
-			switch (message)
-			{
-			case WM_SIZE:
-			{
-				UINT width = LOWORD(lParam);
-				UINT height = HIWORD(lParam);
-				pGame->OnResize(width, height);
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			case WM_DISPLAYCHANGE:
-			{
-				InvalidateRect(hwnd, NULL, FALSE);
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			case WM_PAINT:
-			{
-				pGame->OnRender();
-				ValidateRect(hwnd, NULL);
-			}
-			result = 0;
-			wasHandled = true;
-			break;
-
-			case WM_DESTROY:
-			{
-				PostQuitMessage(0);
-			}
-			result = 1;
-			wasHandled = true;
-			break;
-			}
-		}
-
-		if (!wasHandled)
-		{
-			result = DefWindowProc(hwnd, message, wParam, lParam);
-		}
-	}
-
-	return result;
-
-
 }
+
 
 HRESULT Game::CreateDeviceResources()
 {
@@ -141,71 +48,62 @@ HRESULT Game::CreateDeviceResources()
 
 	return hr;
 }
+
 Game::Game()
 {
-	
 }
 
 Game::~Game()
 {
-	SafeRelease(&m_pDirect2dFactory);
+	currentLevel->Unload();
 	SafeRelease(&m_pRenderTarget);
+	SafeRelease(&m_pDirect2dFactory);
 
 }
 
-HRESULT Game::Init()
+bool Game::Init(HWND hwnd, ID2D1Factory* id2d1factory)
 {
-	HRESULT hr;
-	hr = CreateDeviceIndependentResources();
-	WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = Game::WndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = sizeof(LONG_PTR);
-	wcex.hInstance = HINST_THISCOMPONENT;
-	wcex.hbrBackground = NULL;
-	wcex.lpszMenuName = NULL;
-	wcex.hCursor = LoadCursor(NULL, IDI_APPLICATION);
-	wcex.lpszClassName = L"Game";
-
-	RegisterClassEx(&wcex);
-
-	FLOAT dpiX, dpiY;
-	m_pDirect2dFactory->GetDesktopDpi(&dpiX, &dpiY);
-
-	m_hwnd = CreateWindow(
-		L"Game",
-		L"Direct2D Game",
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		static_cast<UINT>(ceil(640.f * dpiX / 96.f)),
-		static_cast<UINT>(ceil(480.f * dpiY / 96.f)),
-		NULL,
-		NULL,
-		HINST_THISCOMPONENT,
-		this
-	);
-	hr = m_hwnd ? S_OK : E_FAIL;
-	if (SUCCEEDED(hr))
+	m_hwnd = hwnd;
+	m_pDirect2dFactory = id2d1factory;
+	if(m_pDirect2dFactory!=NULL)
 	{
-		ShowWindow(m_hwnd, SW_SHOWNORMAL);
-		UpdateWindow(m_hwnd);
+		CreateDeviceResources();
+		return true;
 	}
-	return hr;
+	else { return false; }
 
 }
 
-void Game::Run()
+int Game::Run()
 {
 	MSG msg;
-
-	while (GetMessage(&msg, NULL, 0, 0)) //PeekMessage(&msg, m_hwnd, NULL, 0, 0)
+	msg.message = WM_NULL;
+	while (msg.message != WM_QUIT)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else
+		{
+			BeginDraw();
+			//currentLevel->Update();
+			OnRender();
+			EndDraw();
+		}
 	}
+	return 0;
+}
 
+void Game::BeginDraw()
+{
+	m_pRenderTarget->BeginDraw();
+}
+
+void Game::EndDraw()
+{
+	m_pRenderTarget->EndDraw();
 }
 
 void Game::OnResize(UINT width, UINT height)
@@ -214,7 +112,4 @@ void Game::OnResize(UINT width, UINT height)
 	{
 		m_pRenderTarget->Resize(D2D1::SizeU(width, height));
 	}
-
 }
-
-
