@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include <wincodec.h>
+//#include "Shared.h"
 
 class BitmapLoader
 {

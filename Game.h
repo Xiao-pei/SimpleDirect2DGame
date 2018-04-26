@@ -3,35 +3,34 @@
 #include "GameLevel.h"
 #include "TestLevel.h"
 #include "resource.h"
+#include "Timer.h"
 
-class Game //游戏主类
+class Game//游戏主类
 {
 private:
 	GameLevel * currentLevel;
-
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
 	void DiscardDeviceResources();
-	void LoadLevel();
-	HRESULT OnRender();
-	static LRESULT CALLBACK WndProc(
-		HWND hwnd,
-		UINT message,
-		WPARAM wParam,
-		LPARAM lParam
-	);
+	void OnRender();
+	void Update();
 
 public:
-	HWND m_hwnd;
-	ID2D1Factory* m_pDirect2dFactory = NULL;
+	HWND m_hwnd=NULL;
+	ID2D1Factory* m_pDirect2dFactory;
 	ID2D1HwndRenderTarget* m_pRenderTarget = NULL;
+	static Timer timer;
 
 	Game();
 	~Game();
-	HRESULT Init();
-	void Run();
+	bool Init(HWND hwnd, ID2D1Factory* id2d1factory);
+	int Run();
+	void LoadLevel();
+	void BeginDraw();
+	void EndDraw();
 	void OnResize(
 		UINT width,
 		UINT height
 	);
+	
 };

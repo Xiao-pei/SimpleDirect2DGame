@@ -1,6 +1,12 @@
 # Prerequisites
 *.d
 
+# Untracked files:
+[...]
+   #       Debug/
+   #       x64/
+[...]
+
 # Compiled Object files
 *.slo
 *.lo

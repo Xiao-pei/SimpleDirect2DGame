@@ -4,7 +4,10 @@
 
 class Testlevel :public GameLevel
 {
-	ID2D1Bitmap* bmp;
+	ID2D1Bitmap* bmp=NULL;
+	ID2D1BitmapBrush *m_pBitmapBrush;
+	float bmpx=0;
+	float bmpy=0;
 public:
 	Testlevel(ID2D1HwndRenderTarget* rt)
 	{
@@ -15,4 +18,5 @@ public:
 	void Unload() override;
 	void OnRender() override;
 	void Update() override;
+	
 };
