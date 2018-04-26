@@ -1,9 +1,0 @@
-﻿  stdafx.cpp
-  BitmapLoader.cpp
-  Game.cpp
-  Main.cpp
-  Testlevel.cpp
-  正在生成代码...
-BitmapLoader.obj : error LNK2001: 无法解析的外部符号 IID_IWICImagingFactory
-Game.obj : error LNK2019: 无法解析的外部符号 D2D1CreateFactory，该符号在函数 "long __cdecl D2D1CreateFactory(enum D2D1_FACTORY_TYPE,struct _GUID const &,void * *)" (?D2D1CreateFactory@@YAJW4D2D1_FACTORY_TYPE@@AEBU_GUID@@PEAPEAX@Z) 中被引用
-C:\Users\1466387944\Documents\Visual Studio 2017\Projects\FurtherStudy\x64\Debug\FurtherStudy.exe : fatal error LNK1120: 2 个无法解析的外部命令
