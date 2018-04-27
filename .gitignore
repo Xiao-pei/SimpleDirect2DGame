@@ -2,10 +2,9 @@
 *.d
 
 # Untracked files:
-[...]
-   #       Debug/
-   #       x64/
-[...]
+*.log
+*.tlog
+Debug
 
 # Compiled Object files
 *.slo

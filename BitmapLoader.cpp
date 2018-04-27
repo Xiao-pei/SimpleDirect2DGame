@@ -5,9 +5,8 @@
 
 BitmapLoader::BitmapLoader(ID2D1HwndRenderTarget* render_targets)
 {
-	HRESULT hr;
 	render_targets_ = render_targets;
-	hr = CoCreateInstance(
+	CoCreateInstance(
 		CLSID_WICImagingFactory,
 		NULL,
 		CLSCTX_INPROC_SERVER,

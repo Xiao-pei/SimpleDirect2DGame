@@ -27,6 +27,7 @@ void Game::OnRender()
 
 void Game::Update()
 {
+	currentLevel->Update();
 }
 
 
@@ -53,7 +54,7 @@ Game::Game()
 {
 }
 
-Game::~Game()
+Game::~Game() //relaease resources
 {
 	currentLevel->Unload();
 	SafeRelease(&m_pRenderTarget);
@@ -88,7 +89,7 @@ int Game::Run()
 		else
 		{
 			BeginDraw();
-			//currentLevel->Update();
+			Update();
 			OnRender();
 			EndDraw();
 		}
