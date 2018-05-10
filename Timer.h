@@ -9,9 +9,9 @@ private:
 public:
 	Timer();
 	~Timer();
-	void Reset();
+	void Reset(); //reset timer
 	double getCurrentTime();
-	double getLastTimeCalled();
+	double getLastTimeCalled(); //last time when we called update()
 	double getStartTime();
 	void Update();
 	double getDeltaTime();

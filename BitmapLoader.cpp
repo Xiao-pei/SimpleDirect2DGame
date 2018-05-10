@@ -13,8 +13,6 @@ BitmapLoader::BitmapLoader(ID2D1HwndRenderTarget* render_targets)
 		IID_IWICImagingFactory,
 		(LPVOID*)&pwicFactory
 	);
-
-	
 }
 
 HRESULT BitmapLoader::createBitmap(const wchar_t* path)
@@ -36,7 +34,7 @@ HRESULT BitmapLoader::createBitmap(const wchar_t* path)
 
 	if (SUCCEEDED(hr))
 	{
-		hr = pConverter->Initialize(
+		pConverter->Initialize(
 			pSource,
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
@@ -45,19 +43,20 @@ HRESULT BitmapLoader::createBitmap(const wchar_t* path)
 			WICBitmapPaletteTypeMedianCut
 		);
 	}
-	 hr = render_targets_->CreateBitmapFromWicBitmap(
+	hr = render_targets_->CreateBitmapFromWicBitmap(
 		pConverter,
 		NULL,
 		&bmp
 	);
-	 SafeRelease(&pDecoder);
-	 SafeRelease(&pSource);
-	 SafeRelease(&pStream);
-	 SafeRelease(&pConverter);
-	 SafeRelease(&pScaler);
-	
+	SafeRelease(&pDecoder);
+	SafeRelease(&pSource);
+	SafeRelease(&pStream);
+	SafeRelease(&pConverter);
+	SafeRelease(&pScaler);
+
 	return hr;
 }
+
 BitmapLoader::~BitmapLoader()
 {
 	if (bmp)

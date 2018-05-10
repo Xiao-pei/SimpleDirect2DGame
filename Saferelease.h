@@ -1,8 +1,9 @@
 #pragma once
 #include "stdafx.h"
-template<class Interface>
+
+template <class Interface>
 inline void SafeRelease(
-	Interface **ppInterfaceToRelease
+	Interface** ppInterfaceToRelease
 )
 {
 	if (*ppInterfaceToRelease != NULL)
@@ -21,7 +22,6 @@ inline void SafeRelease(
 #define Assert(b)
 #endif //DEBUG || _DEBUG
 #endif
-
 
 
 #ifndef HINST_THISCOMPONENT

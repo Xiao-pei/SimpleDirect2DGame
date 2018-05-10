@@ -8,18 +8,18 @@
 class Game//ÓÎÏ·Ö÷Àà
 {
 private:
-	GameLevel * currentLevel;
+	GameLevel* currentLevel;
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
 	void DiscardDeviceResources();
 	void OnRender();
-	void Update();
+	void Update(double delta);
 
 public:
-	HWND m_hwnd=NULL;
+	HWND m_hwnd = NULL;
 	ID2D1Factory* m_pDirect2dFactory;
 	ID2D1HwndRenderTarget* m_pRenderTarget = NULL;
-	static Timer timer;
+	Timer *timer=NULL;
 
 	Game();
 	~Game();
@@ -32,5 +32,4 @@ public:
 		UINT width,
 		UINT height
 	);
-	
 };

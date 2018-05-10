@@ -6,7 +6,7 @@ Timer::Timer()
 {
 	LARGE_INTEGER t;
 	QueryPerformanceFrequency(&t);
-	freq = double(t.QuadPart)/1000.0;
+	freq = double(t.QuadPart) / 1000.0;
 	Reset();
 }
 
@@ -18,7 +18,7 @@ Timer::~Timer()
 void Timer::Reset()
 {
 	QueryPerformanceCounter(&startTime);
-	lastTimeCalled = double(startTime.QuadPart)/freq;
+	lastTimeCalled = double(startTime.QuadPart) / freq;
 }
 
 double Timer::getCurrentTime()

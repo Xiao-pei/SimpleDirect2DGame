@@ -14,20 +14,22 @@ void Game::DiscardDeviceResources()
 	SafeRelease(&m_pRenderTarget);
 }
 
-void Game::LoadLevel()
+void Game::LoadLevel() //load level and reset timer
 {
+	timer->Reset();
 	currentLevel = new Testlevel(m_pRenderTarget);
 }
 
 void Game::OnRender()
 {
-		currentLevel->Load();
-		currentLevel->OnRender();
+	currentLevel->Load();
+	currentLevel->OnRender();
+	timer->Update();
 }
 
-void Game::Update()
+void Game::Update(double delta)
 {
-	currentLevel->Update();
+	currentLevel->Update(delta);
 }
 
 
@@ -59,20 +61,19 @@ Game::~Game() //relaease resources
 	currentLevel->Unload();
 	SafeRelease(&m_pRenderTarget);
 	SafeRelease(&m_pDirect2dFactory);
-
 }
 
 bool Game::Init(HWND hwnd, ID2D1Factory* id2d1factory)
 {
 	m_hwnd = hwnd;
 	m_pDirect2dFactory = id2d1factory;
-	if(m_pDirect2dFactory!=NULL)
+	if (m_pDirect2dFactory != NULL)
 	{
 		CreateDeviceResources();
+		timer = new Timer();
 		return true;
 	}
 	else { return false; }
-
 }
 
 int Game::Run()
@@ -88,8 +89,8 @@ int Game::Run()
 		}
 		else
 		{
+			Update(timer->getDeltaTime());
 			BeginDraw();
-			Update();
 			OnRender();
 			EndDraw();
 		}
