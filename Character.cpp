@@ -6,6 +6,14 @@ Character::Character()
 {
 }
 
+void Character::Update()
+{
+}
+
+void Character::OnRender()
+{
+}
+
 
 Character::~Character()
 {

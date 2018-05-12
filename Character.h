@@ -11,6 +11,8 @@ private:
 
 public:
 	Character();
+	void Update();
+	void OnRender();
 	~Character();
 };
 
