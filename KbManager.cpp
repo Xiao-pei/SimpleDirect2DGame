@@ -62,3 +62,13 @@ bool KbManager::isZKeyDown()
 	else
 		return false;
 }
+
+bool KbManager::isActionKeyDown()
+{
+	if (kb_message == 0x5A|| kb_message == 0x41||
+		kb_message == VK_RIGHT|| kb_message == VK_LEFT)
+	{
+		return true;
+	}
+	else return false;
+}

@@ -9,4 +9,5 @@ public:
 	static bool isRightArrowDown();
 	static bool isAKeyDown();
 	static bool isZKeyDown();
+	static bool isActionKeyDown();
 };
