@@ -4,12 +4,14 @@
 #include "KbManager.h"
 
 
-Character::Character(ID2D1Bitmap* bitmap)
+Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 {
 	time = 0.0f;
+	animation_time = time;
 	bmp = bitmap;
+	fliped_bmp = fliped_bitmap;
 	width = bmp->GetSize().width / 4;
-	height = bmp->GetSize().height / 2;
+	height = bmp->GetSize().height;
 	for (int i = 0; i < 4; i++) // create my frame rect
 	{
 		frame[i] = D2D1::RectF(
@@ -19,6 +21,7 @@ Character::Character(ID2D1Bitmap* bitmap)
 			height
 		);
 	}
+
 	frame_index = 0;
 	x_position = TILE_WIDTH * 3;
 	y_position = TILE_WIDTH * 3;
@@ -32,13 +35,14 @@ Character::Character(ID2D1Bitmap* bitmap)
 	moving_left = false;
 	moving_right = false;
 	moving_enable = false;
+	facing_left = true;
 }
 
 void Character::Update(double delta)
 {
 	time += delta / 1000;
-
-	frame_index = (int)(time * 10) % 4;
+	animation_time += delta / 1000;
+	frame_index = (int)(animation_time * 10) % 4;
 
 	if (KbManager::isActionKeyDown())
 	{
@@ -58,9 +62,15 @@ void Character::Update(double delta)
 		else if (KbManager::isAKeyDown())
 			moving_up = true;
 		else if (KbManager::isLeftArrowDown())
+		{
 			moving_left = true;
+			facing_left = true;
+		}
 		else if (KbManager::isRightArrowDown())
+		{
 			moving_right = true;
+			facing_left = false;
+		}
 		else;
 		moving_enable = true;
 	}
@@ -72,8 +82,6 @@ void Character::Update(double delta)
 		{
 			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
 				jump_time_length));
-		//	grid_y = last_grid_y - ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
-		//		camera_time_length));
 		}
 		if (moving_up)
 		{
@@ -84,16 +92,20 @@ void Character::Update(double delta)
 		{
 			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
 				jump_time_length));
-		//	grid_x = last_grid_x + ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
-		//		camera_time_length));
+			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length)) * (time* (time -
+				jump_time_length));
 		}
 		if (moving_right)
 		{
 			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
 				jump_time_length));
+			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length)) * (time* (time -
+				jump_time_length));
 		}
 		if (time > jump_time_length)
 		{
+			if (moving_left || moving_right)
+				y_position = last_y_position;
 			moving_up = false;
 			moving_dowm = false;
 			moving_left = false;
@@ -102,15 +114,22 @@ void Character::Update(double delta)
 			moving = false;
 		}
 	}
-	character_position_rect = D2D1::RectF(x_position, y_position, x_position + TILE_WIDTH, y_position + TILE_WIDTH);
+	character_position_rect_left = D2D1::RectF(x_position-width,
+		y_position - height, x_position , y_position);
 }
 
 void Character::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 {
-	pRenderTarget->DrawBitmap(bmp, character_position_rect,
+	if(!facing_left)
+		pRenderTarget->DrawBitmap(fliped_bmp, character_position_rect_left,
 	                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
-	);
-	
+		);
+	else
+	{
+		pRenderTarget->DrawBitmap(bmp, character_position_rect_left,
+			1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
+		);
+	}
 }
 
 float Character::getXPosition()

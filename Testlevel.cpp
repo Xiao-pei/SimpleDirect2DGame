@@ -8,7 +8,7 @@ void Testlevel::Load()
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
-			getBitmap(L"fire_elemental1.png"));
+			getBitmap(L"char1.png"), bitmap_loader_->getFlipedBitmap(L"char1.png"));
 	}
 	if(blocks==NULL)
 	{
@@ -50,6 +50,7 @@ void Testlevel::OnRender()
 		&rcBrushRect,
 		m_pBitmapBrush
 	);
+
 	main_character->OnRender(m_pRenderTarget);
 	for (int i = 0; i < 5; ++i)
 	{
@@ -72,4 +73,9 @@ void Testlevel::Update(double delta)
 		grid_x = (-main_character->getXPosition())+ TILE_WIDTH * 3;
 		grid_y = (-main_character->getYPosition())+ TILE_WIDTH * 3;
 	}
+}
+
+GameLevel * Testlevel::LoadNextLevel()
+{
+	return nullptr;
 }

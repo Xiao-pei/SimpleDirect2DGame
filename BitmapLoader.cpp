@@ -15,7 +15,7 @@ BitmapLoader::BitmapLoader(ID2D1HwndRenderTarget* render_targets)
 	);
 }
 
-HRESULT BitmapLoader::createBitmap(const wchar_t* path)
+HRESULT BitmapLoader::createBitmap(const wchar_t* path, const bool flip)
 {
 	HRESULT hr;
 	//Create Decoder
@@ -32,7 +32,25 @@ HRESULT BitmapLoader::createBitmap(const wchar_t* path)
 	if (SUCCEEDED(hr))
 		hr = pwicFactory->CreateFormatConverter(&pConverter);
 
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED(hr)&&flip)
+	{
+		hr = pwicFactory->CreateBitmapFlipRotator(&pFlipRotator);
+		if (SUCCEEDED(hr))
+		{
+			hr = pFlipRotator->Initialize(
+				pSource,                     // Bitmap source to flip.
+				WICBitmapTransformFlipHorizontal);								
+		}
+		pConverter->Initialize(
+			pFlipRotator,
+			GUID_WICPixelFormat32bppPBGRA,
+			WICBitmapDitherTypeNone,
+			NULL,
+			0.f,
+			WICBitmapPaletteTypeMedianCut
+		);
+	}
+	else if (SUCCEEDED(hr))
 	{
 		pConverter->Initialize(
 			pSource,
@@ -43,6 +61,7 @@ HRESULT BitmapLoader::createBitmap(const wchar_t* path)
 			WICBitmapPaletteTypeMedianCut
 		);
 	}
+
 	hr = render_targets_->CreateBitmapFromWicBitmap(
 		pConverter,
 		NULL,
