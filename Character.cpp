@@ -32,8 +32,6 @@ Character::Character(ID2D1Bitmap* bitmap)
 	moving_left = false;
 	moving_right = false;
 	moving_enable = false;
-	grid_x = 0;
-	grid_y = 0;
 }
 
 void Character::Update(double delta)
@@ -50,8 +48,7 @@ void Character::Update(double delta)
 			moving = true;
 			last_y_position = y_position;
 			last_x_position = x_position;
-			last_grid_x = grid_x;
-			last_grid_y = grid_y;
+
 		}
 	}
 	if (moving && !moving_enable)
@@ -75,29 +72,25 @@ void Character::Update(double delta)
 		{
 			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
 				jump_time_length));
-			grid_y = last_grid_y - ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
-				camera_time_length));
+		//	grid_y = last_grid_y - ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
+		//		camera_time_length));
 		}
 		if (moving_up)
 		{
 			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
 				jump_time_length));
-			grid_y = last_grid_y + ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
-				camera_time_length));
 		}
 		if (moving_left)
 		{
 			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
 				jump_time_length));
-			grid_x = last_grid_x + ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
-				camera_time_length));
+		//	grid_x = last_grid_x + ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
+		//		camera_time_length));
 		}
 		if (moving_right)
 		{
 			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
 				jump_time_length));
-			grid_x = last_grid_x - ((-TILE_WIDTH) / (camera_time_length * camera_time_length)) * (time * (time - 2 *
-				camera_time_length));
 		}
 		if (time > jump_time_length)
 		{
@@ -114,10 +107,10 @@ void Character::Update(double delta)
 
 void Character::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 {
-	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
 	pRenderTarget->DrawBitmap(bmp, character_position_rect,
 	                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
 	);
+	
 }
 
 float Character::getXPosition()

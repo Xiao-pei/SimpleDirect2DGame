@@ -20,13 +20,8 @@ private:
 	bool moving_right;
 	bool moving_enable;
 
-	//folowing variables described "camera" position
-	float grid_x;
-	float grid_y;
-	float last_grid_x;
-	float last_grid_y;
 
-	const float jump_time_length = 0.25;
+	const float jump_time_length = 0.3;
 	const float camera_time_length = 0.3;
 
 	ID2D1Bitmap* bmp;
