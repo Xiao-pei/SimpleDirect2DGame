@@ -10,4 +10,5 @@ public:
 	static bool isAKeyDown();
 	static bool isZKeyDown();
 	static bool isActionKeyDown();
+	static void discardMessage();
 };

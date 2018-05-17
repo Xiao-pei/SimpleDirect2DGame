@@ -9,8 +9,7 @@ class Testlevel : public GameLevel
 	ID2D1Bitmap* bmp = NULL;
 	ID2D1Bitmap* test_character_bmp = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrush = NULL;
-
-	Character* main_character=NULL;
+	Character* main_character = NULL;
 
 	float tmpy = 0;
 	float x;

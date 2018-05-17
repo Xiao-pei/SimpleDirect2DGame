@@ -9,13 +9,12 @@ void Testlevel::Load()
 	{
 		main_character = new Character(bitmap_loader_->getBitmap(L"fire_elemental1.png"));
 	}
-		
+
 	if (m_pBitmapBrush == NULL)
 		m_pRenderTarget->CreateBitmapBrush(
 			bmp,
 			&m_pBitmapBrush
 		);
-
 }
 
 void Testlevel::Unload()
@@ -48,19 +47,4 @@ void Testlevel::Update(double delta)
 	main_character->Update(delta);
 
 	const float jump_time_length = 0.15;
-	if (main_character->isMoving())
-	{
-		time = 0;
-		tmpy = y;
-		moving = true;
-	}
-	
-	if (moving)
-	{
-		y = tmpy - ((-96) / (jump_time_length * jump_time_length)) * (time * (time - 2 * jump_time_length));
-		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(x, y));
-		if ((time > jump_time_length))
-			moving = false;
-	}
-	
 }

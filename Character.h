@@ -11,9 +11,25 @@ private:
 	float height;
 	float width;
 	float time;
-	bool moving;
 
-	ID2D1Bitmap* bmp ;
+	//folowing bools described the state of character
+	bool moving;
+	bool moving_dowm;
+	bool moving_up;
+	bool moving_left;
+	bool moving_right;
+	bool moving_enable;
+
+	//folowing variables described "camera" position
+	float grid_x;
+	float grid_y;
+	float last_grid_x;
+	float last_grid_y;
+
+	const float jump_time_length = 0.25;
+	const float camera_time_length = 0.3;
+
+	ID2D1Bitmap* bmp;
 	D2D_RECT_F frame[4];
 	int frame_index;
 	D2D_RECT_F character_position_rect;
@@ -27,4 +43,3 @@ public:
 	bool isMoving();
 	~Character();
 };
-

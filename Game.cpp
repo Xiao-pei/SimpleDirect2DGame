@@ -22,7 +22,6 @@ void Game::LoadLevel() //load level and reset timer
 
 void Game::OnRender()
 {
-	
 	currentLevel->OnRender();
 	timer->Update();
 }
@@ -32,7 +31,6 @@ void Game::Update(double delta)
 	currentLevel->Load();
 	currentLevel->Update(delta);
 }
-
 
 HRESULT Game::CreateDeviceResources()
 {
@@ -55,7 +53,6 @@ HRESULT Game::CreateDeviceResources()
 
 Game::Game()
 {
-
 }
 
 Game::~Game() //relaease resources
