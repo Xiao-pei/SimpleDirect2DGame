@@ -8,16 +8,16 @@ void Testlevel::Load()
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
-			getBitmap(L"char1.png"), bitmap_loader_->getFlipedBitmap(L"char1.png"));
+		                               getBitmap(L"char1.png"), bitmap_loader_->getFlipedBitmap(L"char1.png"));
 	}
-	if(blocks==NULL)
+	if (blocks == NULL)
 	{
 		blocks = new Block[5];
 		for (int i = 0; i < 5; ++i)
 		{
 			blocks[i].initBlock(bitmap_loader_->
 				getBitmap(L"wall-2.png"));
-			blocks[i].setPosition(5, i+5);
+			blocks[i].setPosition(blocks_position[i][1], blocks_position[i][2]);
 		}
 	}
 
@@ -51,10 +51,18 @@ void Testlevel::OnRender()
 		m_pBitmapBrush
 	);
 
-	main_character->OnRender(m_pRenderTarget);
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < BLOCKS_NUMBER; ++i)
 	{
-		blocks[i].OnRender(m_pRenderTarget);
+		if (blocks[i].getIsAbove()) //blocks above character render first
+			blocks[i].OnRender(m_pRenderTarget);
+	}
+
+	main_character->OnRender(m_pRenderTarget);
+
+	for (int i = 0; i < BLOCKS_NUMBER; ++i)
+	{
+		if (!blocks[i].getIsAbove())
+			blocks[i].OnRender(m_pRenderTarget);
 	}
 
 	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
@@ -68,14 +76,20 @@ void Testlevel::Update(double delta)
 		blocks[i].Update(delta);
 	}
 	main_character->Update(delta);
-	if(main_character->isMoving())
+	if (main_character->isMoving())
 	{
-		grid_x = (-main_character->getXPosition())+ TILE_WIDTH * 3;
-		grid_y = (-main_character->getYPosition())+ TILE_WIDTH * 3;
+		grid_x = (-main_character->getXPosition()) + TILE_WIDTH * 6;
+		grid_y = (-main_character->getYPosition()) + TILE_WIDTH * 6;
+	}
+	for (int i = 0; i < BLOCKS_NUMBER; i++)
+	{
+		if (blocks[i].isAboveCharacter(main_character->getYPosition()))
+			blocks[i].setIsAbove(true);
+		else { blocks[i].setIsAbove(false); }
 	}
 }
 
-GameLevel * Testlevel::LoadNextLevel()
+GameLevel* Testlevel::LoadNextLevel()
 {
 	return nullptr;
 }

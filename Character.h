@@ -22,7 +22,6 @@ private:
 	bool moving_enable;
 	bool facing_left;
 
-
 	const float jump_time_length = 0.3;
 	const float camera_time_length = 0.3;
 

@@ -4,13 +4,15 @@
 class Block
 {
 private:
-	float x_position=0;
-	float y_position=0;
+	float x_position = 0;
+	float y_position = 0;
 	float width;
 	float height;
 	float time = 0;
 	bool destoryable;
 	bool destoried;
+	bool is_above; //if the block's position is above the character
+	//it will be draw after the character
 
 	ID2D1Bitmap* bmp;
 	D2D_RECT_F position_rect;
@@ -24,6 +26,8 @@ public:
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget);
 	float getXPosition();
 	float getYPosition();
-	void setPosition(float,float);
+	bool isAboveCharacter(float y);
+	bool getIsAbove();
+	void setPosition(float, float);
+	void setIsAbove(bool);
 };
-

@@ -23,8 +23,8 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	}
 
 	frame_index = 0;
-	x_position = TILE_WIDTH * 3;
-	y_position = TILE_WIDTH * 3;
+	x_position = TILE_WIDTH * 6;
+	y_position = TILE_WIDTH * 6;
 	last_x_position = x_position;
 	last_y_position = y_position;
 	x_velocity = 0;

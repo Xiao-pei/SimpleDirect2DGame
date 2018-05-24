@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Saferelease.h"
 #include "Block.h"
+#define BLOCKS_NUMBER 5
 
 class Testlevel : public GameLevel
 {
@@ -13,10 +14,18 @@ class Testlevel : public GameLevel
 	Block* blocks = NULL;
 
 	float tmpy = 0;
-	float x;
-	float y;
+	float x=0.0f;
+	float y=0.0f;
 	float time = 0;
 	bool moving = false;
+	int blocks_position[BLOCKS_NUMBER][2] = 
+	{
+		4,8,
+		9,8,
+		7,6,
+		3,3,
+		5,2
+	};
 	//folowing variables described "camera" position
 	float grid_x;
 	float grid_y;
@@ -26,8 +35,6 @@ class Testlevel : public GameLevel
 public:
 	Testlevel(ID2D1HwndRenderTarget* rt)
 	{
-		x = 0;
-		y = 0;
 		m_pRenderTarget = rt;
 		bitmap_loader_ = new BitmapLoader(m_pRenderTarget);
 	}
