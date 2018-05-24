@@ -23,8 +23,8 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	}
 
 	frame_index = 0;
-	x_position = TILE_WIDTH * 6;
-	y_position = TILE_WIDTH * 6;
+	x_position = TILE_WIDTH * 7;
+	y_position = TILE_WIDTH * 5;
 	last_x_position = x_position;
 	last_y_position = y_position;
 	x_velocity = 0;
@@ -42,7 +42,7 @@ void Character::Update(double delta)
 {
 	time += delta / 1000;
 	animation_time += delta / 1000;
-	frame_index = (int)(animation_time * 10) % 4;
+	frame_index = (int)(animation_time * 9) % 4;
 
 	if (KbManager::isActionKeyDown())
 	{

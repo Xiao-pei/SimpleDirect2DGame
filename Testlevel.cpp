@@ -12,11 +12,15 @@ void Testlevel::Load()
 	}
 	if (blocks == NULL)
 	{
-		blocks = new Block[5];
-		for (int i = 0; i < 5; ++i)
+		blocks = new Block[BLOCKS_NUMBER];
+		for (int i = 0; i < BLOCKS_NUMBER; ++i)
 		{
-			blocks[i].initBlock(bitmap_loader_->
-				getBitmap(L"wall-2.png"));
+			if (blocks_position[i][0] == 0)
+				blocks[i].initBlock(bitmap_loader_->
+					getBitmap(L"wall-2.png"));
+			else
+				blocks[i].initDestroyableBlock(bitmap_loader_->
+					getBitmap(L"wall-1.png"));
 			blocks[i].setPosition(blocks_position[i][1], blocks_position[i][2]);
 		}
 	}
@@ -71,15 +75,15 @@ void Testlevel::OnRender()
 void Testlevel::Update(double delta)
 {
 	time += delta / 1000;
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < BLOCKS_NUMBER; ++i)
 	{
 		blocks[i].Update(delta);
 	}
 	main_character->Update(delta);
 	if (main_character->isMoving())
 	{
-		grid_x = (-main_character->getXPosition()) + TILE_WIDTH * 6;
-		grid_y = (-main_character->getYPosition()) + TILE_WIDTH * 6;
+		grid_x = (-main_character->getXPosition()) + TILE_WIDTH * 7;
+		grid_y = (-main_character->getYPosition()) + TILE_WIDTH * 5;
 	}
 	for (int i = 0; i < BLOCKS_NUMBER; i++)
 	{

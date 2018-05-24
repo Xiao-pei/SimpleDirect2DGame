@@ -23,7 +23,6 @@ private:
 	bool facing_left;
 
 	const float jump_time_length = 0.3;
-	const float camera_time_length = 0.3;
 
 	ID2D1Bitmap* bmp;
 	ID2D1Bitmap* fliped_bmp;
