@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Saferelease.h"
 #include "Block.h"
+#include "Audio.h"
 #define BLOCKS_NUMBER 20
 
 class Testlevel : public GameLevel
@@ -12,6 +13,7 @@ class Testlevel : public GameLevel
 	ID2D1BitmapBrush* m_pBitmapBrush = NULL;
 	Character* main_character = NULL;
 	Block* blocks = NULL;
+	Audio* music = NULL;
 
 	float tmpy = 0;
 	float x=0.0f;

@@ -4,6 +4,7 @@
 # Untracked files:
 *.log
 *.tlog
+*.wav
 Debug
 Release
 

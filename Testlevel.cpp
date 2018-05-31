@@ -4,7 +4,7 @@
 void Testlevel::Load()
 {
 	if (bmp == NULL)
-		bmp = bitmap_loader_->getBitmap(L"floor-0.png");
+		bmp = bitmap_loader_->getBitmap(L"floor-3.png");
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
@@ -23,6 +23,11 @@ void Testlevel::Load()
 					getBitmap(L"wall-1.png"));
 			blocks[i].setPosition(blocks_position[i][1], blocks_position[i][2]);
 		}
+	}
+	if(music==NULL)
+	{
+		music = new Audio();
+		music->PlayMusic(L"Disco Descent.wav");
 	}
 
 	if (m_pBitmapBrush == NULL)
