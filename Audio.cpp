@@ -17,7 +17,7 @@ HRESULT Audio::Init()
 		return hr;
 }
 
-HRESULT Audio::FindChunk(HANDLE hFile, DWORD fourcc, DWORD & dwChunkSize, DWORD & dwChunkDataPosition)
+HRESULT Audio::FindChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, DWORD& dwChunkDataPosition)
 {
 	HRESULT hr = S_OK;
 	if (INVALID_SET_FILE_POINTER == SetFilePointer(hFile, 0, NULL, FILE_BEGIN))
@@ -65,14 +65,12 @@ HRESULT Audio::FindChunk(HANDLE hFile, DWORD fourcc, DWORD & dwChunkSize, DWORD 
 		dwOffset += dwChunkDataSize;
 
 		if (bytesRead >= dwRIFFDataSize) return S_FALSE;
-
 	}
 
 	return S_OK;
-
 }
 
-HRESULT Audio::ReadChunkData(HANDLE hFile, void * buffer, DWORD buffersize, DWORD bufferoffset)
+HRESULT Audio::ReadChunkData(HANDLE hFile, void* buffer, DWORD buffersize, DWORD bufferoffset)
 {
 	HRESULT hr = S_OK;
 	if (INVALID_SET_FILE_POINTER == SetFilePointer(hFile, bufferoffset, NULL, FILE_BEGIN))
@@ -81,7 +79,6 @@ HRESULT Audio::ReadChunkData(HANDLE hFile, void * buffer, DWORD buffersize, DWOR
 	if (0 == ReadFile(hFile, buffer, buffersize, &dwRead, NULL))
 		hr = HRESULT_FROM_WIN32(GetLastError());
 	return hr;
-
 }
 
 HRESULT Audio::PlayMusic(const wchar_t* path)
@@ -116,22 +113,22 @@ HRESULT Audio::PlayMusic(const wchar_t* path)
 	//Locate the 'fmt' chunk, and copy its contents into a WAVEFORMATEXTENSIBLE structure. 
 
 	FindChunk(hFile, fourccDATA, dwChunkSize, dwChunkPosition);
-	BYTE * pDataBuffer = new BYTE[dwChunkSize];
+	BYTE* pDataBuffer = new BYTE[dwChunkSize];
 	ReadChunkData(hFile, pDataBuffer, dwChunkSize, dwChunkPosition);
 
-	buffer.AudioBytes = dwChunkSize;  //buffer containing audio data
-	buffer.pAudioData = pDataBuffer;  //size of the audio buffer in bytes
+	buffer.AudioBytes = dwChunkSize; //buffer containing audio data
+	buffer.pAudioData = pDataBuffer; //size of the audio buffer in bytes
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 
 	HRESULT hr;
 	IXAudio2SourceVoice* pSourceVoice;
-	if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, (WAVEFORMATEX*)&wfx))) 
+	if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, (WAVEFORMATEX*)&wfx)))
 		return hr;
 	if (FAILED(hr = pSourceVoice->SubmitSourceBuffer(&buffer)))
 		return hr;
-	if (FAILED(hr = pSourceVoice->Start(0)))	//start the source voice
+	if (FAILED(hr = pSourceVoice->Start(0))) //start the source voice
 		return hr;
-
+	return S_OK;
 }
 
 

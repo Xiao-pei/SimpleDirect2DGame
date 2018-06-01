@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TestLevel.h"
+#include "Saferelease.h"
 
 void Testlevel::Load()
 {
@@ -24,7 +25,7 @@ void Testlevel::Load()
 			blocks[i].setPosition(blocks_position[i][1], blocks_position[i][2]);
 		}
 	}
-	if(music==NULL)
+	if (music == NULL)
 	{
 		music = new Audio();
 		music->PlayMusic(L"Disco Descent.wav");
@@ -39,11 +40,12 @@ void Testlevel::Load()
 
 void Testlevel::Unload()
 {
-	m_pBitmapBrush->Release();
 	SafeRelease(&m_pBitmapBrush);
 	delete main_character;
 	delete blocks;
-	bmp->Release();
+	SafeRelease(&bmp);
+	delete collision;
+	delete music;
 }
 
 void Testlevel::OnRender()
@@ -85,11 +87,25 @@ void Testlevel::Update(double delta)
 		blocks[i].Update(delta);
 	}
 	main_character->Update(delta);
+
+	if (main_character->isAboutToMove()) //if character is about to move, begin to detect collision
+	{
+		for(int i=0;i<BLOCKS_NUMBER;i++)
+		{
+			if(collision->AreTheyCollided(main_character,&blocks[i]))
+			{
+				collision->HandleCollision(main_character, &blocks[i]);
+				break;
+			}
+		}
+	}
+
 	if (main_character->isMoving())
 	{
 		grid_x = (-main_character->getXPosition()) + TILE_WIDTH * 7;
 		grid_y = (-main_character->getYPosition()) + TILE_WIDTH * 5;
 	}
+
 	for (int i = 0; i < BLOCKS_NUMBER; i++)
 	{
 		if (blocks[i].isAboveCharacter(main_character->getYPosition()))

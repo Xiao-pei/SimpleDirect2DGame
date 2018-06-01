@@ -15,6 +15,7 @@ private:
 
 	//folowing bools described the state of character
 	bool moving;
+	bool begin_moving;
 	bool moving_dowm;
 	bool moving_up;
 	bool moving_left;
@@ -28,8 +29,7 @@ private:
 	ID2D1Bitmap* fliped_bmp;
 	D2D_RECT_F frame[4];
 	int frame_index;
-	D2D_RECT_F character_position_rect_left;
-	D2D_RECT_F character_position_rect_right;
+	D2D_RECT_F character_position_rect;
 
 public:
 	Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
@@ -37,6 +37,11 @@ public:
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget);
 	float getXPosition();
 	float getYPosition();
+
+	float getDestinationX();
+	float getDestinationY();
+	bool isAboutToMove();
 	bool isMoving();
+	void collided();
 	~Character();
 };

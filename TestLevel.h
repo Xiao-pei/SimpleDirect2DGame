@@ -2,9 +2,9 @@
 #include "BitmapLoader.h"
 #include "GameLevel.h"
 #include "Character.h"
-#include "Saferelease.h"
 #include "Block.h"
 #include "Audio.h"
+#include "SimpleCollision.h"
 #define BLOCKS_NUMBER 20
 
 class Testlevel : public GameLevel
@@ -14,10 +14,11 @@ class Testlevel : public GameLevel
 	Character* main_character = NULL;
 	Block* blocks = NULL;
 	Audio* music = NULL;
+	SimpleCollision* collision = NULL;
 
 	float tmpy = 0;
-	float x=0.0f;
-	float y=0.0f;
+	float x = 0.0f;
+	float y = 0.0f;
 	float time = 0;
 	bool moving = false;
 	//folowing variables described "camera" position
@@ -25,9 +26,9 @@ class Testlevel : public GameLevel
 	float grid_y;
 	float last_grid_x;
 	float last_grid_y;
-	int blocks_position[BLOCKS_NUMBER][3] =  
+	int blocks_position[BLOCKS_NUMBER][3] =
 	{
-		0,1,9,		// destoryable, x, y 
+		0,1,9, // destoryable, x, y 
 		0,1,10,
 		1,2,10,
 		1,2,13,

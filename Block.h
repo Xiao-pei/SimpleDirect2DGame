@@ -13,10 +13,10 @@ private:
 	bool destoried;
 	bool is_above; //if the block's position is above the character
 	//it will be draw after the character
-
 	ID2D1Bitmap* bmp;
 	D2D_RECT_F position_rect;
 	D2D_RECT_F source_rect;
+
 public:
 	Block();
 	~Block();
@@ -28,6 +28,9 @@ public:
 	float getYPosition();
 	bool isAboveCharacter(float y);
 	bool getIsAbove();
+	bool isDestroied();
+	bool isDestoryable();
 	void setPosition(float, float);
 	void setIsAbove(bool);
+	bool blockDestoried(); //return true if a block is destroied
 };

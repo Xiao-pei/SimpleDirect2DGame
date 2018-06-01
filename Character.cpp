@@ -30,6 +30,7 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	x_velocity = 0;
 	y_velocity = 0;
 	moving = false;
+	begin_moving = false;
 	moving_dowm = false;
 	moving_up = false;
 	moving_left = false;
@@ -50,9 +51,9 @@ void Character::Update(double delta)
 		{
 			time = 0;
 			moving = true;
+			begin_moving = true;
 			last_y_position = y_position;
 			last_x_position = x_position;
-
 		}
 	}
 	if (moving && !moving_enable)
@@ -80,27 +81,27 @@ void Character::Update(double delta)
 	{
 		if (moving_dowm)
 		{
-			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
-				jump_time_length));
+			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
+				* (time * (time - 2 * jump_time_length));
 		}
 		if (moving_up)
 		{
-			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
-				jump_time_length));
+			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
+				* (time * (time - 2 * jump_time_length));
 		}
 		if (moving_left)
 		{
-			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
-				jump_time_length));
-			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length)) * (time* (time -
-				jump_time_length));
+			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
+				* (time * (time - 2 * jump_time_length));
+			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
+				* (time * (time - jump_time_length));
 		}
 		if (moving_right)
 		{
-			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length)) * (time * (time - 2 *
-				jump_time_length));
-			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length)) * (time* (time -
-				jump_time_length));
+			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
+				* (time * (time - 2 * jump_time_length));
+			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
+				* (time * (time - jump_time_length));
 		}
 		if (time > jump_time_length)
 		{
@@ -114,20 +115,20 @@ void Character::Update(double delta)
 			moving = false;
 		}
 	}
-	character_position_rect_left = D2D1::RectF(x_position-width,
-		y_position - height, x_position , y_position);
+	character_position_rect = D2D1::RectF(x_position - width,
+	                                           y_position - height, x_position, y_position);
 }
 
 void Character::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 {
-	if(!facing_left)
-		pRenderTarget->DrawBitmap(fliped_bmp, character_position_rect_left,
-	                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
+	if (!facing_left)
+		pRenderTarget->DrawBitmap(fliped_bmp, character_position_rect,
+		                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
 		);
 	else
 	{
-		pRenderTarget->DrawBitmap(bmp, character_position_rect_left,
-			1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
+		pRenderTarget->DrawBitmap(bmp, character_position_rect,
+		                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
 		);
 	}
 }
@@ -142,11 +143,62 @@ float Character::getYPosition()
 	return y_position;
 }
 
+float Character::getDestinationX()
+{
+	if (moving_right)
+	{
+		return x_position + TILE_WIDTH;
+	}
+	else if (moving_left)
+	{
+		return x_position - TILE_WIDTH;
+	}
+	else
+		return x_position;
+}
+
+float Character::getDestinationY()
+{
+	if (moving_dowm)
+	{
+		return y_position + TILE_WIDTH;
+	}
+	else if (moving_up)
+	{
+		return y_position - TILE_WIDTH;
+	}
+	else
+		return y_position;
+}
+
+
+bool Character::isAboutToMove()
+{
+	if (begin_moving)
+	{
+		begin_moving = false;
+		return true;
+	}
+	else
+		return false;
+}
+
 bool Character::isMoving()
 {
 	return moving;
 }
 
+void Character::collided()
+{
+	moving_up = false;
+	moving_dowm = false;
+	moving_left = false;
+	moving_right = false;
+	moving_enable = false;
+	moving = false;
+	y_position = last_y_position;
+	x_position = last_x_position;
+}
 
 Character::~Character()
 {

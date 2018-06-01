@@ -25,8 +25,8 @@ class Audio
 private:
 	IXAudio2* pXAudio2 = NULL;
 	IXAudio2MasteringVoice* pMasterVoice = NULL;
-	WAVEFORMATEXTENSIBLE wfx = { 0 };
-	XAUDIO2_BUFFER buffer = { 0 };
+	WAVEFORMATEXTENSIBLE wfx = {0};
+	XAUDIO2_BUFFER buffer = {0};
 
 public:
 	Audio();

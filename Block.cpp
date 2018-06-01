@@ -69,6 +69,16 @@ bool Block::getIsAbove()
 	return is_above;
 }
 
+bool Block::isDestroied()
+{
+	return destoried;
+}
+
+bool Block::isDestoryable()
+{
+	return destoryable;
+}
+
 void Block::setPosition(float x, float y)
 {
 	x_position = x * TILE_WIDTH;
@@ -78,4 +88,15 @@ void Block::setPosition(float x, float y)
 void Block::setIsAbove(bool above)
 {
 	is_above = above;
+}
+
+bool Block::blockDestoried()
+{
+	if (destoryable&&!destoried)
+	{
+		destoried = true;
+		return true;
+	}
+	else { return false; }
+		
 }
