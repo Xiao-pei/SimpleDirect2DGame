@@ -35,5 +35,9 @@ public:
 	void Update(double delta) override;
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget) override;
 	void setPosition(int x, int y) override;
+	float getDestinationX() override;
+	float getDestinationY() override;
+	void collided() override;
+	bool isAboutToMove() override;
 };
 

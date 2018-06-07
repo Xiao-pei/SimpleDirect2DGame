@@ -68,6 +68,20 @@ void Invader::Update(double delta)
 			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
+		if (moving_left)
+		{
+			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
+				* (jump_time * (jump_time - 2 * jump_time_length));
+			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
+				* (jump_time * (jump_time - jump_time_length));
+		}
+		if (moving_right)
+		{
+			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
+				* (jump_time * (jump_time - 2 * jump_time_length));
+			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
+				* (jump_time * (jump_time - jump_time_length));
+		}
 		if (jump_time > jump_time_length)
 		{
 			if (moving_left || moving_right)
@@ -90,6 +104,7 @@ void Invader::Update(double delta)
 	                                      y_position - height, x_position, y_position);
 }
 
+
 void Invader::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 {
 	if (!dead)
@@ -111,4 +126,55 @@ void Invader::setPosition(int x, int y)
 	y_position = TILE_WIDTH * y;
 	last_x_position = x_position;
 	last_y_position = y_position;
+}
+
+float Invader::getDestinationX()
+{
+	if (moving_right)
+	{
+		return x_position + TILE_WIDTH;
+	}
+	else if (moving_left)
+	{
+		return x_position - TILE_WIDTH;
+	}
+	else
+		return x_position;
+}
+
+float Invader::getDestinationY()
+{
+	if (moving_dowm)
+	{
+		return y_position + TILE_WIDTH;
+	}
+	else if (moving_up)
+	{
+		return y_position - TILE_WIDTH;
+	}
+	else
+		return y_position;
+}
+
+void Invader::collided()
+{
+	moving_up = false;
+	moving_dowm = false;
+	moving_left = false;
+	moving_right = false;
+	moving_enable = false;
+	acting = false;
+	y_position = last_y_position;
+	x_position = last_x_position;
+}
+
+bool Invader::isAboutToMove()
+{
+	if (begin_moving)
+	{
+		begin_moving = false;
+		return true;
+	}
+	else
+		return false;
 }

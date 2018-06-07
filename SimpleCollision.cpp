@@ -12,7 +12,7 @@ SimpleCollision::~SimpleCollision()
 {
 }
 
-bool SimpleCollision::AreTheyCollided(Character* character, Block* block)
+bool SimpleCollision::AreTheyCollided(Actor* character, Block* block)
 {
 	float const difference_between_x = character->getDestinationX() - block->getXPosition();
 	float const difference_between_y = character->getDestinationY() - block->getYPosition();
@@ -24,7 +24,7 @@ bool SimpleCollision::AreTheyCollided(Character* character, Block* block)
 	else return false;
 }
 
-bool SimpleCollision::HandleCollision(Character* character, Block* block)
+bool SimpleCollision::HandleCollision(Actor* character, Block* block)
 {
 	if(!block->isDestoryable()||!block->isDestroied())
 		character->collided();

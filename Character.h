@@ -35,11 +35,11 @@ public:
 	Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
 	void Update(double delta) override;
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget) override;
-	float getDestinationX();
-	float getDestinationY();
-	bool isAboutToMove();
+	float getDestinationX() override;
+	float getDestinationY() override;
+	bool isAboutToMove() override;
 	bool isMoving();
-	void collided();
+	void collided() override;
 	void setMovingEnable(bool b);
 	void setPosition(int x, int y) override;
 	~Character();
