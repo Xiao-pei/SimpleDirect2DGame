@@ -6,8 +6,8 @@
 
 Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 {
-	time = 0.0f;
-	animation_time = time;
+	jump_time = 0.0f;
+	time = jump_time;
 	bmp = bitmap;
 	fliped_bmp = fliped_bitmap;
 	width = bmp->GetSize().width / 4;
@@ -27,9 +27,7 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	y_position = TILE_WIDTH * 5;
 	last_x_position = x_position;
 	last_y_position = y_position;
-	x_velocity = 0;
-	y_velocity = 0;
-	moving = false;
+	acting = false;
 	begin_moving = false;
 	moving_dowm = false;
 	moving_up = false;
@@ -37,26 +35,27 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	moving_right = false;
 	moving_enable = false;
 	facing_left = true;
+	dead = false;
 }
 
 void Character::Update(double delta)
 {
+	jump_time += delta / 1000;
 	time += delta / 1000;
-	animation_time += delta / 1000;
-	frame_index = (int)(animation_time * 9) % 4;
+	frame_index = (int)(time * 9) % 4;
 
 	if (KbManager::isActionKeyDown())
 	{
-		if (!moving)
+		if (!acting)
 		{
-			time = 0;
-			moving = true;
+			jump_time = 0;
+			acting = true;
 			begin_moving = true;
 			last_y_position = y_position;
 			last_x_position = x_position;
 		}
 	}
-	if (moving && !moving_enable)
+	if (acting && !moving_enable)
 	{
 		if (KbManager::isZKeyDown())
 			moving_dowm = true;
@@ -77,33 +76,33 @@ void Character::Update(double delta)
 	}
 	else { KbManager::discardMessage(); }
 
-	if (moving && moving_enable)
+	if (acting && moving_enable)
 	{
 		if (moving_dowm)
 		{
 			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
-				* (time * (time - 2 * jump_time_length));
+				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
 		if (moving_up)
 		{
 			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
-				* (time * (time - 2 * jump_time_length));
+				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
 		if (moving_left)
 		{
 			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
-				* (time * (time - 2 * jump_time_length));
+				* (jump_time * (jump_time - 2 * jump_time_length));
 			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
-				* (time * (time - jump_time_length));
+				* (jump_time * (jump_time - jump_time_length));
 		}
 		if (moving_right)
 		{
 			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
-				* (time * (time - 2 * jump_time_length));
+				* (jump_time * (jump_time - 2 * jump_time_length));
 			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
-				* (time * (time - jump_time_length));
+				* (jump_time * (jump_time - jump_time_length));
 		}
-		if (time > jump_time_length)
+		if (jump_time > jump_time_length)
 		{
 			if (moving_left || moving_right)
 				y_position = last_y_position;
@@ -112,7 +111,7 @@ void Character::Update(double delta)
 			moving_left = false;
 			moving_right = false;
 			moving_enable = false;
-			moving = false;
+			acting = false;
 		}
 	}
 	character_position_rect = D2D1::RectF(x_position - width,
@@ -121,26 +120,17 @@ void Character::Update(double delta)
 
 void Character::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 {
-	if (!facing_left)
-		pRenderTarget->DrawBitmap(fliped_bmp, character_position_rect,
-		                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
-		);
-	else
+	if (!dead)
 	{
-		pRenderTarget->DrawBitmap(bmp, character_position_rect,
-		                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
-		);
+		if (!facing_left)
+			pRenderTarget->DrawBitmap(fliped_bmp, character_position_rect,
+				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
+			);
+		else
+			pRenderTarget->DrawBitmap(bmp, character_position_rect,
+				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
+			);
 	}
-}
-
-float Character::getXPosition()
-{
-	return x_position;
-}
-
-float Character::getYPosition()
-{
-	return y_position;
 }
 
 float Character::getDestinationX()
@@ -185,7 +175,7 @@ bool Character::isAboutToMove()
 
 bool Character::isMoving()
 {
-	return moving;
+	return acting;
 }
 
 void Character::collided()
@@ -195,12 +185,26 @@ void Character::collided()
 	moving_left = false;
 	moving_right = false;
 	moving_enable = false;
-	moving = false;
+	acting = false;
 	y_position = last_y_position;
 	x_position = last_x_position;
+}
+
+void Character::setMovingEnable(bool b)
+{
+	moving_enable = b;
+}
+
+void Character::setPosition(int x, int y)
+{
+	x_position = TILE_WIDTH * x;
+	y_position = TILE_WIDTH * y;
+	last_x_position = x_position;
+	last_y_position = y_position;
 }
 
 Character::~Character()
 {
 	SafeRelease(&bmp);
+	SafeRelease(&fliped_bmp);
 }

@@ -1,46 +1,39 @@
 #pragma once
 #include "Actor.h"
-
-class Character:public Actor
+class Invader :
+	public Actor
 {
 private:
+	int frame_index;
+	double jump_time;
+	const float jump_time_length = 0.3;
+	D2D_RECT_F frame[4];
+
 
 	float last_x_position;
 	float last_y_position;
 	float height;
 	float width;
-	float jump_time;
 	float time;
+	float last_jump_time;
 
-	//folowing bools described the state of character
 	bool acting;
 	bool begin_moving;
 	bool moving_dowm;
 	bool moving_up;
-	bool moving_left;
+	bool moving_left ;
 	bool moving_right;
 	bool moving_enable;
 	bool facing_left;
 	bool dead;
-
-	const float jump_time_length = 0.3;
-
 	ID2D1Bitmap* bmp;
 	ID2D1Bitmap* fliped_bmp;
-	D2D_RECT_F frame[4];
-	int frame_index;
 	D2D_RECT_F character_position_rect;
-
 public:
-	Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
+	Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
+	~Invader();
 	void Update(double delta) override;
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget) override;
-	float getDestinationX();
-	float getDestinationY();
-	bool isAboutToMove();
-	bool isMoving();
-	void collided();
-	void setMovingEnable(bool b);
 	void setPosition(int x, int y) override;
-	~Character();
 };
+

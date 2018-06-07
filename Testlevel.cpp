@@ -2,6 +2,7 @@
 #include "TestLevel.h"
 #include "Saferelease.h"
 
+
 void Testlevel::Load()
 {
 	if (bmp == NULL)
@@ -9,7 +10,9 @@ void Testlevel::Load()
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
-		                               getBitmap(L"char1.png"), bitmap_loader_->getFlipedBitmap(L"char1.png"));
+		                               getBitmap(L"char1.png"),
+		                               bitmap_loader_->getFlipedBitmap(L"char1.png"));
+		actors.push_back(main_character);
 	}
 	if (blocks == NULL)
 	{
@@ -24,6 +27,14 @@ void Testlevel::Load()
 					getBitmap(L"wall-1.png"));
 			blocks[i].setPosition(blocks_position[i][1], blocks_position[i][2]);
 		}
+	}
+	if (enemy == NULL)
+	{
+		enemy = new Invader(bitmap_loader_->
+		                    getBitmap(L"char1.png"),
+		                    bitmap_loader_->getFlipedBitmap(L"char1.png"));
+		enemy->setPosition(6, 6);
+		actors.push_back(enemy);
 	}
 	if (music == NULL)
 	{
@@ -46,6 +57,7 @@ void Testlevel::Unload()
 	SafeRelease(&bmp);
 	delete collision;
 	delete music;
+	delete enemy;
 }
 
 void Testlevel::OnRender()
@@ -62,37 +74,53 @@ void Testlevel::OnRender()
 		m_pBitmapBrush
 	);
 
-	for (int i = 0; i < BLOCKS_NUMBER; ++i)
+	std::vector<Actor*>::iterator iterator = actors.begin();
+	for (int i = 0; i < BLOCKS_NUMBER;)
 	{
-		if (blocks[i].getIsAbove()) //blocks above character render first
-			blocks[i].OnRender(m_pRenderTarget);
-	}
-
-	main_character->OnRender(m_pRenderTarget);
-
-	for (int i = 0; i < BLOCKS_NUMBER; ++i)
-	{
-		if (!blocks[i].getIsAbove())
-			blocks[i].OnRender(m_pRenderTarget);
+		if (iterator != actors.end() && blocks[i].isAboveCharacter((*iterator)->getYPosition()))
+			//blocks above character render first
+		{
+			blocks[i++].OnRender(m_pRenderTarget);
+		}
+		else
+		{
+			if (iterator != actors.end())
+			{
+				(*iterator)->OnRender(m_pRenderTarget);
+				++iterator;
+			}
+			else
+				blocks[i++].OnRender(m_pRenderTarget);
+		}
 	}
 
 	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
 }
 
+bool com(Actor* a, Actor* b)
+{
+	if (abs(a->getYPosition() - b->getYPosition()) < 1)
+		return a->getXPosition() < b->getXPosition();
+	else
+		return a->getYPosition() < b->getYPosition();
+}
+
 void Testlevel::Update(double delta)
 {
+	std::sort(actors.begin(), actors.end(), com);
 	time += delta / 1000;
 	for (int i = 0; i < BLOCKS_NUMBER; ++i)
 	{
 		blocks[i].Update(delta);
 	}
 	main_character->Update(delta);
+	enemy->Update(delta);
 
 	if (main_character->isAboutToMove()) //if character is about to move, begin to detect collision
 	{
-		for(int i=0;i<BLOCKS_NUMBER;i++)
+		for (int i = 0; i < BLOCKS_NUMBER; i++)
 		{
-			if(collision->AreTheyCollided(main_character,&blocks[i]))
+			if (collision->AreTheyCollided(main_character, &blocks[i]))
 			{
 				collision->HandleCollision(main_character, &blocks[i]);
 				break;
@@ -104,13 +132,6 @@ void Testlevel::Update(double delta)
 	{
 		grid_x = (-main_character->getXPosition()) + TILE_WIDTH * 7;
 		grid_y = (-main_character->getYPosition()) + TILE_WIDTH * 5;
-	}
-
-	for (int i = 0; i < BLOCKS_NUMBER; i++)
-	{
-		if (blocks[i].isAboveCharacter(main_character->getYPosition()))
-			blocks[i].setIsAbove(true);
-		else { blocks[i].setIsAbove(false); }
 	}
 }
 

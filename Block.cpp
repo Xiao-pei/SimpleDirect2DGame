@@ -58,10 +58,10 @@ float Block::getYPosition()
 
 bool Block::isAboveCharacter(float y)
 {
-	if (y_position >= y)
-		return false;
-	else
+	if (y_position < y)
 		return true;
+	else
+		return false;
 }
 
 bool Block::getIsAbove()

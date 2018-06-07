@@ -1,6 +1,7 @@
 #pragma once
 #include "BitmapLoader.h"
 #include "KbManager.h"
+#include "Actor.h"
 
 class GameLevel
 {
@@ -14,3 +15,4 @@ public:
 	virtual void OnRender() = 0; //render
 	virtual GameLevel* LoadNextLevel() = 0; //load next level
 };
+

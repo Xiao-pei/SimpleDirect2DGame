@@ -12,8 +12,7 @@ private:
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
 	void DiscardDeviceResources();
-	void OnRender();
-	void Update(double delta);
+	
 
 public:
 	HWND m_hwnd = NULL;
@@ -28,6 +27,8 @@ public:
 	void LoadLevel();
 	void BeginDraw();
 	void EndDraw();
+	void OnRender();
+	void Update(double delta);
 	void OnResize(
 		UINT width,
 		UINT height

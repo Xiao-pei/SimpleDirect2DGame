@@ -16,6 +16,9 @@
     <Filter Include="源文件\GameLevel">
       <UniqueIdentifier>{6ccd35a9-7a98-42cc-8914-6768b1a1f43f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Enemy">
+      <UniqueIdentifier>{ee2cbf9a-391e-4136-8bf4-cf5a86f307bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -57,15 +60,15 @@
     <ClInclude Include="SimpleCollision.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="Invader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="BitmapLoader.cpp">
@@ -95,7 +98,10 @@
     <ClCompile Include="SimpleCollision.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="Invader.cpp">
+      <Filter>源文件\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
