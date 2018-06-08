@@ -7,11 +7,13 @@
 Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 {
 	jump_time = 0.0f;
+	life = 4;
 	time = jump_time;
 	bmp = bitmap;
 	fliped_bmp = fliped_bitmap;
 	width = bmp->GetSize().width / 4;
 	height = bmp->GetSize().height;
+	player = new Audio();
 	for (int i = 0; i < 4; i++) // create my frame rect
 	{
 		frame[i] = D2D1::RectF(
@@ -23,6 +25,7 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	}
 
 	frame_index = 0;
+	sound_index = 0;
 	x_position = TILE_WIDTH * 7;
 	y_position = TILE_WIDTH * 5;
 	last_x_position = x_position;
@@ -178,8 +181,25 @@ bool Character::isMoving()
 	return acting;
 }
 
+bool Character::isDead()
+{
+	return dead;
+}
+
 void Character::collided()
 {
+	switch (sound_index)
+	{
+	case 0:
+		player->PlayMusic(L"sfxsound/attack2.wav");
+		sound_index = 1;
+		break;
+	case 1:
+		player->PlayMusic(L"sfxsound/attack3.wav");
+		sound_index = 0;
+		break;
+	}
+
 	moving_up = false;
 	moving_dowm = false;
 	moving_left = false;
@@ -203,8 +223,18 @@ void Character::setPosition(int x, int y)
 	last_y_position = y_position;
 }
 
+void Character::beingAttacked()
+{
+	life--;
+	if (!life)
+	{
+		dead = true;
+	}
+}
+
 Character::~Character()
 {
 	SafeRelease(&bmp);
 	SafeRelease(&fliped_bmp);
+	delete player;
 }

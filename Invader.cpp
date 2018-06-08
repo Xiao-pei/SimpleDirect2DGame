@@ -6,6 +6,7 @@
 Invader::Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 {
 	time = 0.0f;
+	life = 2;
 	jump_time = 0.0f;
 	last_jump_time = 0.0f;
 	bmp = bitmap;
@@ -177,4 +178,16 @@ bool Invader::isAboutToMove()
 	}
 	else
 		return false;
+}
+
+bool Invader::isDead()
+{
+	return dead;
+}
+
+void Invader::beingAttacked()
+{
+	--life;
+	if (!life)
+		dead = true;
 }

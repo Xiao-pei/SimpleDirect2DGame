@@ -20,7 +20,7 @@ private:
 	Audio* music = NULL;
 	SimpleCollision* collision = NULL;
 	Invader *enemy = NULL;
-	std::vector<Actor*> actors;
+	std::vector<Actor*> actors; //vector of collision and rendering
 
 	float tmpy = 0;
 	float x = 0.0f;
@@ -34,7 +34,7 @@ private:
 	float last_grid_y;
 	int blocks_position[BLOCKS_NUMBER][3] =// destoryable, x, y
 	{
-		0,1,1,  
+		0,1,1,  //y must increase progressively
 		0,1,1,
 		1,2,1,
 		1,1,3,
@@ -43,7 +43,7 @@ private:
 		0,4,4,
 		0,6,5,
 		1,6,7,
-		0,18,6,
+		0,10,7,
 		1,18,7,
 		0,19,8,
 		0,10,9,

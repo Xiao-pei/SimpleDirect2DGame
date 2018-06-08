@@ -5,6 +5,7 @@ class Invader :
 {
 private:
 	int frame_index;
+	int life;
 	double jump_time;
 	const float jump_time_length = 0.3;
 	D2D_RECT_F frame[4];
@@ -39,5 +40,7 @@ public:
 	float getDestinationY() override;
 	void collided() override;
 	bool isAboutToMove() override;
+	bool isDead() override;
+	void beingAttacked() override;
 };
 

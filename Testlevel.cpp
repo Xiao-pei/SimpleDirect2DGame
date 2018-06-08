@@ -93,7 +93,7 @@ void Testlevel::OnRender()
 				blocks[i++].OnRender(m_pRenderTarget);
 		}
 	}
-	while(iterator != actors.end())
+	while (iterator != actors.end()) //draw the rest character
 		(*iterator++)->OnRender(m_pRenderTarget);
 
 	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
@@ -117,9 +117,12 @@ void Testlevel::Update(double delta)
 	}
 	main_character->Update(delta);
 	enemy->Update(delta);
-	for(int i=0;i<actors.size();i++)
+
+	for (int i = 0; i < actors.size(); i++)
 	{
-		if (actors[i]->isAboutToMove()) //if character is about to move, begin to detect collision
+		if (actors[i]->isDead())
+			actors.erase(actors.begin() + i);
+		else if (actors[i]->isAboutToMove()) //if character is about to move, begin to detect collision
 		{
 			for (int j = 0; j < BLOCKS_NUMBER; j++)
 			{
@@ -128,6 +131,15 @@ void Testlevel::Update(double delta)
 					collision->HandleCollision(actors[i], &blocks[j]);
 					break;
 				}
+			}
+			for (int j = 0; j < actors.size(); j++)
+			{
+				if (j != i)
+					if (collision->AreTheyCollided(actors[i], actors[j]))
+					{
+						collision->HandleCollision(actors[i], actors[j]);
+						break;
+					}
 			}
 		}
 	}

@@ -1,10 +1,11 @@
 #pragma once
 #include "Actor.h"
+#include "Audio.h"
 
 class Character:public Actor
 {
 private:
-
+	int life;
 	float last_x_position;
 	float last_y_position;
 	float height;
@@ -25,6 +26,8 @@ private:
 
 	const float jump_time_length = 0.3;
 
+	Audio* player;
+	int sound_index;
 	ID2D1Bitmap* bmp;
 	ID2D1Bitmap* fliped_bmp;
 	D2D_RECT_F frame[4];
@@ -39,8 +42,10 @@ public:
 	float getDestinationY() override;
 	bool isAboutToMove() override;
 	bool isMoving();
+	bool isDead() override;
 	void collided() override;
 	void setMovingEnable(bool b);
 	void setPosition(int x, int y) override;
+	void beingAttacked() override;
 	~Character();
 };
