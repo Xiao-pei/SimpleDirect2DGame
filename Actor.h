@@ -4,9 +4,12 @@
 
 class Actor
 {
-public:
+protected:
 	float x_position;
 	float y_position;
+	int life;
+	bool dead;
+public:
 	Actor() = default;
 	virtual ~Actor() = default;
 	virtual void Update(double delta) = 0; //update
@@ -14,7 +17,7 @@ public:
 	virtual bool isAboutToMove() = 0;
 	virtual void beingAttacked()=0;
 	//	virtual bool isMoving()=0;
-	virtual bool isDead()=0;
+	bool isDead() { return dead; }
 	float getXPosition() { return x_position; }
 	float getYPosition() { return y_position; }
 	//	virtual void setMovingEnable(bool b);

@@ -181,11 +181,6 @@ bool Character::isMoving()
 	return acting;
 }
 
-bool Character::isDead()
-{
-	return dead;
-}
-
 void Character::collided()
 {
 	switch (sound_index)
@@ -229,6 +224,7 @@ void Character::beingAttacked()
 	if (!life)
 	{
 		dead = true;
+		player->PlayMusic(L"sfxsound/death.wav");
 	}
 }
 

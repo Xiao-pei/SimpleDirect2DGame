@@ -5,7 +5,6 @@
 class Character:public Actor
 {
 private:
-	int life;
 	float last_x_position;
 	float last_y_position;
 	float height;
@@ -22,10 +21,9 @@ private:
 	bool moving_right;
 	bool moving_enable;
 	bool facing_left;
-	bool dead;
 
 	const float jump_time_length = 0.3;
-
+	
 	Audio* player;
 	int sound_index;
 	ID2D1Bitmap* bmp;
@@ -42,7 +40,6 @@ public:
 	float getDestinationY() override;
 	bool isAboutToMove() override;
 	bool isMoving();
-	bool isDead() override;
 	void collided() override;
 	void setMovingEnable(bool b);
 	void setPosition(int x, int y) override;

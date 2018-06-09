@@ -1,6 +1,6 @@
 #pragma once
 #include "Actor.h"
-class Invader :
+class Intruder :
 	public Actor
 {
 private:
@@ -8,6 +8,7 @@ private:
 	double jump_time;
 	const float jump_time_length = 0.3;
 	D2D_RECT_F frame[4];
+
 
 	float last_x_position;
 	float last_y_position;
@@ -20,24 +21,25 @@ private:
 	bool begin_moving;
 	bool moving_dowm;
 	bool moving_up;
-	bool moving_left ;
+	bool moving_left;
 	bool moving_right;
 	bool moving_enable;
 	bool facing_left;
-	Audio* player;
 	ID2D1Bitmap* bmp;
 	ID2D1Bitmap* fliped_bmp;
 	D2D_RECT_F character_position_rect;
+	Actor *target;  //use target position to update
 public:
-	Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
-	~Invader();
+	Intruder(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
+	~Intruder();
 	void Update(double delta) override;
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget) override;
-	void setPosition(int x, int y) override;
+	bool isAboutToMove() override;
 	float getDestinationX() override;
 	float getDestinationY() override;
-	void collided() override;
-	bool isAboutToMove() override;
 	void beingAttacked() override;
+	void collided() override;
+	void setPosition(int x, int y) override;
+	void setTarget(Actor*);
 };
 

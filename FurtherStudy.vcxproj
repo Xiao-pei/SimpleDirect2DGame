@@ -157,6 +157,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameLevel.h" />
+    <ClInclude Include="Intruder.h" />
     <ClInclude Include="Invader.h" />
     <ClInclude Include="KbManager.h" />
     <ClInclude Include="Resource.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Intruder.cpp" />
     <ClCompile Include="Invader.cpp" />
     <ClCompile Include="KbManager.cpp" />
     <ClCompile Include="Main.cpp" />

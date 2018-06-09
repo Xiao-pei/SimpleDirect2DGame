@@ -36,6 +36,15 @@ void Testlevel::Load()
 		enemy->setPosition(6, 6);
 		actors.push_back(enemy);
 	}
+	if(intruder==NULL)
+	{
+		intruder=new Intruder(bitmap_loader_->
+			getBitmap(L"char1.png"),
+			bitmap_loader_->getFlipedBitmap(L"char1.png"));
+		intruder->setPosition(8, 8);
+		intruder->setTarget(main_character);
+		actors.push_back(intruder);
+	}
 	if (music == NULL)
 	{
 		music = new Audio();
@@ -115,8 +124,11 @@ void Testlevel::Update(double delta)
 	{
 		blocks[i].Update(delta);
 	}
-	main_character->Update(delta);
-	enemy->Update(delta);
+
+	for (int i = 0; i < actors.size(); i++)
+	{
+		actors[i]->Update(delta);
+	}
 
 	for (int i = 0; i < actors.size(); i++)
 	{

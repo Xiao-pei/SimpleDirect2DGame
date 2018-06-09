@@ -8,6 +8,7 @@
 #include "Actor.h"
 #include "Invader.h"
 #include <vector>
+#include "Intruder.h"
 #define BLOCKS_NUMBER 20
 
 class Testlevel : public GameLevel
@@ -20,6 +21,7 @@ private:
 	Audio* music = NULL;
 	SimpleCollision* collision = NULL;
 	Invader *enemy = NULL;
+	Intruder* intruder = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering
 
 	float tmpy = 0;
