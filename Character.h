@@ -15,11 +15,6 @@ private:
 	//folowing bools described the state of character
 	bool acting;
 	bool begin_moving;
-	bool moving_dowm;
-	bool moving_up;
-	bool moving_left;
-	bool moving_right;
-	bool moving_enable;
 	bool facing_left;
 
 	const float jump_time_length = 0.3;
@@ -40,7 +35,8 @@ public:
 	float getDestinationY() override;
 	bool isAboutToMove() override;
 	bool isMoving();
-	void collided() override;
+	void collidedWithActor() override;
+	void collidedWithBlock() override;
 	void setMovingEnable(bool b);
 	void setPosition(int x, int y) override;
 	void beingAttacked() override;

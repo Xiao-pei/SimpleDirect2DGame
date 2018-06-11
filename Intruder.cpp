@@ -6,6 +6,7 @@
 Intruder::Intruder(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 {
 	jump_time = 0.0f;
+	collide_count = 0;
 	life = 3;
 	time = 0.0f;
 	bmp = bitmap;
@@ -25,11 +26,9 @@ Intruder::Intruder(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	frame_index = 0;
 	acting = false;
 	begin_moving = false;
-	moving_dowm = false;
-	moving_up = false;
-	moving_left = false;
-	moving_right = false;
+	moving_state = STILL;
 	moving_enable = false;
+	continue_moving = false;
 	facing_left = true;
 	dead = false;
 }
@@ -46,34 +45,61 @@ void Intruder::Update(double delta)
 	jump_time += delta / 1000;
 	time += delta / 1000;
 	frame_index = (int)(time * 10) % 4;
-	if(target->isDead()==false&&!acting)
+	if (target->isDead() == false && !acting) //decide the moing direction of the Intruder
 	{
-		moving_dowm = false;
-		moving_up = false;
-		moving_right = false;
-		moving_left = false;
-		if (std::abs(target->getYPosition() - y_position) <TILE_WIDTH/3 )
+		moving_state = STILL;
+		if (collide_count > 1)
 		{
-			if (target->getXPosition()<x_position)
+			continue_moving = true;
+			if (collided_direction == UP || collided_direction == DOWN)
 			{
-				moving_left = true;
+				if (target->getXPosition() < x_position)
+				{
+					moving_state = LEFT;
+				}
+				else
+				{
+					moving_state = RIGHT;
+				}
 			}
 			else
 			{
-				moving_right = true;
+				if (target->getYPosition() < y_position)
+				{
+					moving_state = UP;
+				}
+				else
+				{
+					moving_state = DOWN;
+				}
 			}
 		}
-		else if(target->getYPosition()<y_position)
+		else if (std::abs(target->getYPosition() - y_position) < TILE_WIDTH / 3)
 		{
-			moving_up = true;
-
+			if (target->getXPosition() < x_position)
+			{
+				moving_state = LEFT;
+			}
+			else
+			{
+				moving_state = RIGHT;
+			}
+		}
+		else if (target->getYPosition() < y_position)
+		{
+			moving_state = UP;
 		}
 		else
 		{
-			moving_dowm = true;
+			moving_state = DOWN;
+		}
+		if (continue_moving && !collide_count)
+		{
+			moving_state = collided_direction;
 		}
 	}
-	if (time - last_jump_time>jump_time_length * 5 && !acting)
+
+	if (time - last_jump_time > jump_time_length * 5 && !acting)
 	{
 		jump_time = 0;
 		last_jump_time = time;
@@ -83,26 +109,27 @@ void Intruder::Update(double delta)
 		last_x_position = x_position;
 		moving_enable = true;
 	}
+
 	if (acting && moving_enable)
 	{
-		if (moving_dowm)
+		if (moving_state == DOWN)
 		{
 			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
-		if (moving_up)
+		if (moving_state == UP)
 		{
 			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
-		if (moving_left)
+		if (moving_state == LEFT)
 		{
 			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - jump_time_length));
 		}
-		if (moving_right)
+		if (moving_state == RIGHT)
 		{
 			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
@@ -111,24 +138,18 @@ void Intruder::Update(double delta)
 		}
 		if (jump_time > jump_time_length)
 		{
-			if (moving_left || moving_right)
+			if (moving_state == LEFT || moving_state == RIGHT)
 				y_position = last_y_position;
-			if (moving_up)
-			{
-				moving_up = false;
-				moving_dowm = true;
-			}
-			else
-			{
-				moving_up = true;
-				moving_dowm = false;
-			}
+			moving_state = STILL;
 			moving_enable = false;
 			acting = false;
+			if (collide_count == 0)
+				continue_moving = false;
+			collide_count = 0;
 		}
 	}
 	character_position_rect = D2D1::RectF(x_position - width,
-		y_position - height, x_position, y_position);
+	                                      y_position - height, x_position, y_position);
 }
 
 void Intruder::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
@@ -137,11 +158,11 @@ void Intruder::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 	{
 		if (!facing_left)
 			pRenderTarget->DrawBitmap(fliped_bmp, character_position_rect,
-				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
+			                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
 			);
 		else
 			pRenderTarget->DrawBitmap(bmp, character_position_rect,
-				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
+			                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
 			);
 	}
 }
@@ -159,11 +180,11 @@ bool Intruder::isAboutToMove()
 
 float Intruder::getDestinationX()
 {
-	if (moving_right)
+	if (moving_state == RIGHT)
 	{
 		return x_position + TILE_WIDTH;
 	}
-	else if (moving_left)
+	else if (moving_state == LEFT)
 	{
 		return x_position - TILE_WIDTH;
 	}
@@ -173,11 +194,11 @@ float Intruder::getDestinationX()
 
 float Intruder::getDestinationY()
 {
-	if (moving_dowm)
+	if (moving_state == DOWN)
 	{
 		return y_position + TILE_WIDTH;
 	}
-	else if (moving_up)
+	else if (moving_state == UP)
 	{
 		return y_position - TILE_WIDTH;
 	}
@@ -192,15 +213,11 @@ void Intruder::beingAttacked()
 	{
 		dead = true;
 	}
-		
 }
 
-void Intruder::collided()
+void Intruder::collidedWithActor()
 {
-	moving_up = false;
-	moving_dowm = false;
-	moving_left = false;
-	moving_right = false;
+	moving_state = STILL;
 	moving_enable = false;
 	acting = false;
 	y_position = last_y_position;
@@ -213,6 +230,13 @@ void Intruder::setPosition(int x, int y)
 	y_position = TILE_WIDTH * y;
 	last_x_position = x_position;
 	last_y_position = y_position;
+}
+
+void Intruder::collidedWithBlock()
+{
+	collide_count++;
+	collided_direction = moving_state;
+	collidedWithActor();
 }
 
 void Intruder::setTarget(Actor* actor)

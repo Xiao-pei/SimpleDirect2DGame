@@ -48,8 +48,12 @@ void Testlevel::Load()
 	if (music == NULL)
 	{
 		music = new Audio();
-		music->PlayMusic(L"Disco Descent.wav");
+		music->PlayMusic(L"Tutorial.wav");
 	}
+	if (beats_reader == NULL)
+		beats_reader = new BeatsReader();
+	if (beats == NULL)
+		beats = beats_reader->getBeats(L"Tutorial.txt");
 
 	if (m_pBitmapBrush == NULL)
 		m_pRenderTarget->CreateBitmapBrush(

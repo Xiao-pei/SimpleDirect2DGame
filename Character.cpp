@@ -32,10 +32,7 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	last_y_position = y_position;
 	acting = false;
 	begin_moving = false;
-	moving_dowm = false;
-	moving_up = false;
-	moving_left = false;
-	moving_right = false;
+	moving_state = STILL;
 	moving_enable = false;
 	facing_left = true;
 	dead = false;
@@ -61,17 +58,17 @@ void Character::Update(double delta)
 	if (acting && !moving_enable)
 	{
 		if (KbManager::isZKeyDown())
-			moving_dowm = true;
+			moving_state = DOWN;
 		else if (KbManager::isAKeyDown())
-			moving_up = true;
+			moving_state = UP;
 		else if (KbManager::isLeftArrowDown())
 		{
-			moving_left = true;
+			moving_state = LEFT;
 			facing_left = true;
 		}
 		else if (KbManager::isRightArrowDown())
 		{
-			moving_right = true;
+			moving_state = RIGHT;
 			facing_left = false;
 		}
 		else;
@@ -81,24 +78,24 @@ void Character::Update(double delta)
 
 	if (acting && moving_enable)
 	{
-		if (moving_dowm)
+		if (moving_state == DOWN)
 		{
 			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
-		if (moving_up)
+		if (moving_state == UP)
 		{
 			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
-		if (moving_left)
+		if (moving_state == LEFT)
 		{
 			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - jump_time_length));
 		}
-		if (moving_right)
+		if (moving_state == RIGHT)
 		{
 			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
@@ -107,12 +104,9 @@ void Character::Update(double delta)
 		}
 		if (jump_time > jump_time_length)
 		{
-			if (moving_left || moving_right)
+			if (moving_state == LEFT || moving_state == RIGHT)
 				y_position = last_y_position;
-			moving_up = false;
-			moving_dowm = false;
-			moving_left = false;
-			moving_right = false;
+			moving_state = STILL;
 			moving_enable = false;
 			acting = false;
 		}
@@ -138,11 +132,11 @@ void Character::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 
 float Character::getDestinationX()
 {
-	if (moving_right)
+	if (moving_state == RIGHT)
 	{
 		return x_position + TILE_WIDTH;
 	}
-	else if (moving_left)
+	else if (moving_state == LEFT)
 	{
 		return x_position - TILE_WIDTH;
 	}
@@ -152,11 +146,11 @@ float Character::getDestinationX()
 
 float Character::getDestinationY()
 {
-	if (moving_dowm)
+	if (moving_state==DOWN)
 	{
 		return y_position + TILE_WIDTH;
 	}
-	else if (moving_up)
+	else if (moving_state==UP)
 	{
 		return y_position - TILE_WIDTH;
 	}
@@ -181,7 +175,7 @@ bool Character::isMoving()
 	return acting;
 }
 
-void Character::collided()
+void Character::collidedWithActor()
 {
 	switch (sound_index)
 	{
@@ -195,14 +189,16 @@ void Character::collided()
 		break;
 	}
 
-	moving_up = false;
-	moving_dowm = false;
-	moving_left = false;
-	moving_right = false;
+	moving_state = STILL;
 	moving_enable = false;
 	acting = false;
 	y_position = last_y_position;
 	x_position = last_x_position;
+}
+
+void Character::collidedWithBlock()
+{
+	collidedWithActor();
 }
 
 void Character::setMovingEnable(bool b)

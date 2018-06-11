@@ -18,11 +18,6 @@ private:
 
 	bool acting;
 	bool begin_moving;
-	bool moving_dowm;
-	bool moving_up;
-	bool moving_left ;
-	bool moving_right;
-	bool moving_enable;
 	bool facing_left;
 	Audio* player;
 	ID2D1Bitmap* bmp;
@@ -36,8 +31,9 @@ public:
 	void setPosition(int x, int y) override;
 	float getDestinationX() override;
 	float getDestinationY() override;
-	void collided() override;
+	void collidedWithActor() override;
 	bool isAboutToMove() override;
+	void collidedWithBlock() override;
 	void beingAttacked() override;
 };
 

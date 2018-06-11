@@ -27,10 +27,7 @@ Invader::Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 
 	acting = false;
 	begin_moving = false;
-	moving_dowm = false;
-	moving_up = true; //go up first
-	moving_left = false;
-	moving_right = false;
+	moving_state = UP;
 	moving_enable = false;
 	facing_left = true;
 	dead = false;
@@ -61,24 +58,24 @@ void Invader::Update(double delta)
 	}
 	if (acting && moving_enable)
 	{
-		if (moving_dowm)
+		if (moving_state==DOWN)
 		{
 			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
-		if (moving_up)
+		if (moving_state == UP)
 		{
 			y_position = last_y_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 		}
-		if (moving_left)
+		if (moving_state == LEFT)
 		{
 			x_position = last_x_position - ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
 			y_position = last_y_position - ((-64) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - jump_time_length));
 		}
-		if (moving_right)
+		if (moving_state == RIGHT)
 		{
 			x_position = last_x_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
@@ -87,17 +84,15 @@ void Invader::Update(double delta)
 		}
 		if (jump_time > jump_time_length)
 		{
-			if (moving_left || moving_right)
+			if (moving_state == LEFT || moving_state == RIGHT)
 				y_position = last_y_position;
-			if (moving_up)
+			if (moving_state == UP)
 			{
-				moving_up = false;
-				moving_dowm = true;
+				moving_state = DOWN;
 			}
 			else
 			{
-				moving_up = true;
-				moving_dowm = false;
+				moving_state = UP;
 			}
 			moving_enable = false;
 			acting = false;
@@ -133,11 +128,11 @@ void Invader::setPosition(int x, int y)
 
 float Invader::getDestinationX()
 {
-	if (moving_right)
+	if (moving_state == RIGHT)
 	{
 		return x_position + TILE_WIDTH;
 	}
-	else if (moving_left)
+	else if (moving_state == LEFT)
 	{
 		return x_position - TILE_WIDTH;
 	}
@@ -147,11 +142,11 @@ float Invader::getDestinationX()
 
 float Invader::getDestinationY()
 {
-	if (moving_dowm)
+	if (moving_state == DOWN)
 	{
 		return y_position + TILE_WIDTH;
 	}
-	else if (moving_up)
+	else if (moving_state == UP)
 	{
 		return y_position - TILE_WIDTH;
 	}
@@ -159,12 +154,9 @@ float Invader::getDestinationY()
 		return y_position;
 }
 
-void Invader::collided()
+void Invader::collidedWithActor()
 {
-	moving_up = false;
-	moving_dowm = false;
-	moving_left = false;
-	moving_right = false;
+	moving_state = STILL;
 	moving_enable = false;
 	acting = false;
 	y_position = last_y_position;
@@ -180,6 +172,11 @@ bool Invader::isAboutToMove()
 	}
 	else
 		return false;
+}
+
+void Invader::collidedWithBlock()
+{
+	collidedWithActor();
 }
 
 void Invader::beingAttacked()

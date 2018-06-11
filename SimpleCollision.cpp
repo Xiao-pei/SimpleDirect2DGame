@@ -40,13 +40,13 @@ bool SimpleCollision::AreTheyCollided(Actor * attacker, Actor * attackee)
 bool SimpleCollision::HandleCollision(Actor* character, Block* block)
 {
 	if(!block->isDestoryable()||!block->isDestroied())
-		character->collided();
+		character->collidedWithBlock();
 	return block->blockDestoried();
 }
 
 bool SimpleCollision::HandleCollision(Actor * attacker, Actor * attackee)
 {
-	attacker->collided();
+	attacker->collidedWithActor();
 	attackee->beingAttacked();
 	return attackee->isDead();
 }

@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="BeatsReader.h" />
     <ClInclude Include="BitmapLoader.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Character.h" />
@@ -169,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="BeatsReader.cpp" />
     <ClCompile Include="BitmapLoader.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Character.cpp" />
