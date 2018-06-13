@@ -31,6 +31,7 @@ Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	last_x_position = x_position;
 	last_y_position = y_position;
 	acting = false;
+	moving = false;
 	begin_moving = false;
 	moving_state = STILL;
 	moving_enable = false;
@@ -48,14 +49,11 @@ void Character::Update(double delta)
 	{
 		if (!acting)
 		{
-			jump_time = 0;
 			acting = true;
 			begin_moving = true;
-			last_y_position = y_position;
-			last_x_position = x_position;
 		}
 	}
-	if (acting && !moving_enable)
+	if (acting && moving_enable&&!moving)
 	{
 		if (KbManager::isZKeyDown())
 			moving_state = DOWN;
@@ -72,11 +70,14 @@ void Character::Update(double delta)
 			facing_left = false;
 		}
 		else;
-		moving_enable = true;
+		jump_time = 0;
+		last_y_position = y_position;
+		last_x_position = x_position;
+		moving = true;
 	}
 	else { KbManager::discardMessage(); }
 
-	if (acting && moving_enable)
+	if (moving )
 	{
 		if (moving_state == DOWN)
 		{
@@ -107,10 +108,12 @@ void Character::Update(double delta)
 			if (moving_state == LEFT || moving_state == RIGHT)
 				y_position = last_y_position;
 			moving_state = STILL;
-			moving_enable = false;
+			moving = false;
 			acting = false;
 		}
 	}
+	if (getDestinationX() < 0 || getDestinationY() < 0)
+		collidedWithActor();
 	character_position_rect = D2D1::RectF(x_position - width,
 	                                           y_position - height, x_position, y_position);
 }
@@ -172,7 +175,7 @@ bool Character::isAboutToMove()
 
 bool Character::isMoving()
 {
-	return acting;
+	return moving;
 }
 
 void Character::collidedWithActor()
@@ -190,8 +193,8 @@ void Character::collidedWithActor()
 	}
 
 	moving_state = STILL;
-	moving_enable = false;
-	acting = false;
+	//moving_enable = false;
+	moving = false;
 	y_position = last_y_position;
 	x_position = last_x_position;
 }

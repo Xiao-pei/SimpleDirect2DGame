@@ -25,7 +25,7 @@ Invader::Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	}
 	frame_index = 0;
 
-	acting = false;
+	moving = false;
 	begin_moving = false;
 	moving_state = UP;
 	moving_enable = false;
@@ -46,19 +46,18 @@ void Invader::Update(double delta)
 	jump_time += delta / 1000;
 	frame_index = (int)(time * 10) % 4;
 
-	if (time-last_jump_time>jump_time_length*3 && !acting)
+	if (time - last_jump_time > jump_time_length * 2 && !moving && moving_enable)
 	{
 		jump_time = 0;
 		last_jump_time = time;
-		acting = true;
+		moving = true;
 		begin_moving = true;
 		last_y_position = y_position;
 		last_x_position = x_position;
-		moving_enable = true;
 	}
-	if (acting && moving_enable)
+	if (moving )
 	{
-		if (moving_state==DOWN)
+		if (moving_state == DOWN)
 		{
 			y_position = last_y_position + ((-TILE_WIDTH) / (jump_time_length * jump_time_length))
 				* (jump_time * (jump_time - 2 * jump_time_length));
@@ -95,7 +94,7 @@ void Invader::Update(double delta)
 				moving_state = UP;
 			}
 			moving_enable = false;
-			acting = false;
+			moving = false;
 		}
 	}
 	character_position_rect = D2D1::RectF(x_position - width,
@@ -157,8 +156,8 @@ float Invader::getDestinationY()
 void Invader::collidedWithActor()
 {
 	moving_state = STILL;
-	moving_enable = false;
-	acting = false;
+	//moving_enable = false;
+	moving = false;
 	y_position = last_y_position;
 	x_position = last_x_position;
 }
@@ -187,5 +186,4 @@ void Invader::beingAttacked()
 		dead = true;
 		player->PlayMusic(L"sfxsound/death.wav");
 	}
-		
 }

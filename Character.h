@@ -14,6 +14,7 @@ private:
 
 	//folowing bools described the state of character
 	bool acting;
+	bool moving;
 	bool begin_moving;
 	bool facing_left;
 

@@ -18,7 +18,6 @@ private:
 	float time;
 	float last_jump_time;
 
-	bool acting;
 	int collide_count;
 	int collided_direction;
 	bool begin_moving;

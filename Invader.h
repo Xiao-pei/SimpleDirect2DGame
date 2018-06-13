@@ -16,7 +16,6 @@ private:
 	float time;
 	float last_jump_time;
 
-	bool acting;
 	bool begin_moving;
 	bool facing_left;
 	Audio* player;

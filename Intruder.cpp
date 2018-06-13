@@ -24,7 +24,7 @@ Intruder::Intruder(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
 	}
 
 	frame_index = 0;
-	acting = false;
+	moving = false;
 	begin_moving = false;
 	moving_state = STILL;
 	moving_enable = false;
@@ -45,7 +45,7 @@ void Intruder::Update(double delta)
 	jump_time += delta / 1000;
 	time += delta / 1000;
 	frame_index = (int)(time * 10) % 4;
-	if (target->isDead() == false && !acting) //decide the moing direction of the Intruder
+	if (target->isDead() == false && !moving) //decide the moing direction of the Intruder
 	{
 		moving_state = STILL;
 		if (collide_count > 1)
@@ -54,63 +54,47 @@ void Intruder::Update(double delta)
 			if (collided_direction == UP || collided_direction == DOWN)
 			{
 				if (target->getXPosition() < x_position)
-				{
 					moving_state = LEFT;
-				}
 				else
-				{
 					moving_state = RIGHT;
-				}
 			}
 			else
 			{
 				if (target->getYPosition() < y_position)
-				{
 					moving_state = UP;
-				}
 				else
-				{
 					moving_state = DOWN;
-				}
 			}
 		}
 		else if (std::abs(target->getYPosition() - y_position) < TILE_WIDTH / 3)
 		{
 			if (target->getXPosition() < x_position)
-			{
 				moving_state = LEFT;
-			}
 			else
-			{
 				moving_state = RIGHT;
-			}
 		}
 		else if (target->getYPosition() < y_position)
-		{
 			moving_state = UP;
-		}
 		else
-		{
 			moving_state = DOWN;
-		}
+
 		if (continue_moving && !collide_count)
 		{
 			moving_state = collided_direction;
 		}
 	}
 
-	if (time - last_jump_time > jump_time_length * 5 && !acting)
+	if (time - last_jump_time > jump_time_length * 4 && !moving &&moving_enable)
 	{
 		jump_time = 0;
 		last_jump_time = time;
-		acting = true;
+		moving = true;
 		begin_moving = true;
 		last_y_position = y_position;
 		last_x_position = x_position;
-		moving_enable = true;
 	}
 
-	if (acting && moving_enable)
+	if (moving)
 	{
 		if (moving_state == DOWN)
 		{
@@ -142,7 +126,7 @@ void Intruder::Update(double delta)
 				y_position = last_y_position;
 			moving_state = STILL;
 			moving_enable = false;
-			acting = false;
+			moving = false;
 			if (collide_count == 0)
 				continue_moving = false;
 			collide_count = 0;
@@ -219,7 +203,7 @@ void Intruder::collidedWithActor()
 {
 	moving_state = STILL;
 	moving_enable = false;
-	acting = false;
+	moving = false;
 	y_position = last_y_position;
 	x_position = last_x_position;
 }

@@ -11,6 +11,7 @@ protected:
 	int life;
 	int moving_state;
 	bool dead;
+	bool moving;
 	bool moving_enable;
 public:
 	Actor() = default;

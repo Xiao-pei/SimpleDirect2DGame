@@ -27,6 +27,7 @@ private:
 	std::vector<float> *beats = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering
 
+	int beats_index=0;
 	float tmpy = 0;
 	float x = 0.0f;
 	float y = 0.0f;
