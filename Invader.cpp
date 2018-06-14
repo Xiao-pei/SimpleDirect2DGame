@@ -44,7 +44,7 @@ void Invader::Update(double delta)
 {
 	time += delta / 1000;
 	jump_time += delta / 1000;
-	frame_index = (int)(time * 10) % 4;
+	frame_index = (int)(time * 7) % 4;
 
 	if (time - last_jump_time > jump_time_length * 2 && !moving && moving_enable)
 	{

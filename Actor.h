@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Audio.h"
+#include "Saferelease.h"
 
 class Actor
 {
@@ -13,9 +14,15 @@ protected:
 	bool dead;
 	bool moving;
 	bool moving_enable;
+	ID2D1Bitmap* bmp;
+	ID2D1Bitmap* fliped_bmp;
 public:
 	Actor() = default;
-	virtual ~Actor() = default;
+	virtual ~Actor()
+	{
+		SafeRelease(&bmp);
+		SafeRelease(&fliped_bmp);
+	}
 	virtual void Update(double delta) = 0; //update
 	virtual void OnRender(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 	virtual bool isAboutToMove() = 0;

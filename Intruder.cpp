@@ -44,7 +44,7 @@ void Intruder::Update(double delta)
 {
 	jump_time += delta / 1000;
 	time += delta / 1000;
-	frame_index = (int)(time * 10) % 4;
+	frame_index = (int)(time * 8) % 4;
 	if (target->isDead() == false && !moving) //decide the moing direction of the Intruder
 	{
 		moving_state = STILL;

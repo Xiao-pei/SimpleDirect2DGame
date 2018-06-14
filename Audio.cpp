@@ -121,7 +121,6 @@ HRESULT Audio::PlayMusic(const wchar_t* path)
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 
 	HRESULT hr;
-	IXAudio2SourceVoice* pSourceVoice;
 	if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, (WAVEFORMATEX*)&wfx)))
 		return hr;
 	if (FAILED(hr = pSourceVoice->SubmitSourceBuffer(&buffer)))
@@ -134,7 +133,7 @@ HRESULT Audio::PlayMusic(const wchar_t* path)
 
 Audio::~Audio()
 {
+	pSourceVoice->DestroyVoice();
+	//pSourceVoice->DestroyVoice();
 	SafeRelease(&pXAudio2);
-	pMasterVoice->DestroyVoice();
-	delete pMasterVoice;
 }

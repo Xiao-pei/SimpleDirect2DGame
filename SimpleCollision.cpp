@@ -8,9 +8,6 @@ SimpleCollision::SimpleCollision()
 }
 
 
-SimpleCollision::~SimpleCollision()
-{
-}
 
 bool SimpleCollision::AreTheyCollided(Actor* character, Block* block)
 {

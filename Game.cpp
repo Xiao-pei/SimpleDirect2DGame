@@ -18,18 +18,26 @@ void Game::LoadLevel() //load level and reset timer
 {
 	timer->Reset();
 	currentLevel = new Testlevel(m_pRenderTarget);
+	currentLevel->Load();
 }
 
 void Game::OnRender()
 {
+	currentLevel->Load();
 	currentLevel->OnRender();
 	timer->Update();
 }
 
 void Game::Update(double delta)
 {
-	currentLevel->Load();
 	currentLevel->Update(delta);
+	if(currentLevel->isLoadNextLevel())
+	{
+		GameLevel* pre = currentLevel;
+		currentLevel = currentLevel->LoadNextLevel();
+		delete pre;
+	}
+		
 }
 
 HRESULT Game::CreateDeviceResources()

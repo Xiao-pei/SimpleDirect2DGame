@@ -112,8 +112,9 @@ void Character::Update(double delta)
 			acting = false;
 		}
 	}
-	if (getDestinationX() < 0 || getDestinationY() < 0)
-		collidedWithActor();
+	if (getDestinationX() < -1 || getDestinationY() < -1) //character can't go outside of the map
+		collidedWithBlock();
+
 	character_position_rect = D2D1::RectF(x_position - width,
 	                                           y_position - height, x_position, y_position);
 }
@@ -229,7 +230,5 @@ void Character::beingAttacked()
 
 Character::~Character()
 {
-	SafeRelease(&bmp);
-	SafeRelease(&fliped_bmp);
 	delete player;
 }

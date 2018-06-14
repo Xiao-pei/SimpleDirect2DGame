@@ -23,8 +23,8 @@ private:
 	bool begin_moving;
 	bool facing_left;
 	bool continue_moving;
-	ID2D1Bitmap* bmp;
-	ID2D1Bitmap* fliped_bmp;
+//	ID2D1Bitmap* bmp;
+//	ID2D1Bitmap* fliped_bmp;
 	D2D_RECT_F character_position_rect;
 	Actor* target; //use target position to update
 public:

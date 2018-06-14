@@ -10,10 +10,10 @@ Block::Block()
 	bmp = NULL;
 }
 
-Block::~Block()
-{
-	SafeRelease(&bmp);
-}
+//Block::~Block()
+//{
+//	SafeRelease(&bmp);
+//}
 
 void Block::initBlock(ID2D1Bitmap* bitmap)
 {

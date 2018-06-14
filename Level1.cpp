@@ -1,31 +1,16 @@
 #include "stdafx.h"
-#include "TestLevel.h"
-#include "Saferelease.h"
 #include "Level1.h"
+#define BLOCKS_NUMBER 2
 
-
-Testlevel::~Testlevel()
-{
-	//Testlevel::Unload();
-	delete blocks;
-	if (enemy)
-		delete enemy;
-	if (intruder)
-		delete intruder;
-	if (beats_reader)
-		delete beats_reader;
-	SafeRelease(&m_pBitmapBrush);
-}
-
-void Testlevel::Load()
+void Level1::Load()
 {
 	if (bmp == NULL)
 		bmp = bitmap_loader_->getBitmap(L"floor-3.png");
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
-		                               getBitmap(L"char1.png"),
-		                               bitmap_loader_->getFlipedBitmap(L"char1.png"));
+			getBitmap(L"char1.png"),
+			bitmap_loader_->getFlipedBitmap(L"char1.png"));
 		actors.push_back(main_character);
 	}
 	if (blocks == NULL)
@@ -45,16 +30,16 @@ void Testlevel::Load()
 	if (enemy == NULL)
 	{
 		enemy = new Invader(bitmap_loader_->
-		                    getBitmap(L"char2.png"),
-		                    bitmap_loader_->getFlipedBitmap(L"char2.png"));
-		enemy->setPosition(6, 6);
+			getBitmap(L"char2.png"),
+			bitmap_loader_->getFlipedBitmap(L"char2.png"));
+		enemy->setPosition(2, 2);
 		actors.push_back(enemy);
 	}
-	if(intruder==NULL)
+	if (intruder == NULL)
 	{
-		intruder=new Intruder(bitmap_loader_->
-			getBitmap(L"char3.png"),
-			bitmap_loader_->getFlipedBitmap(L"char3.png"));
+		intruder = new Intruder(bitmap_loader_->
+			getBitmap(L"char1.png"),
+			bitmap_loader_->getFlipedBitmap(L"char1.png"));
 		intruder->setPosition(8, 8);
 		intruder->setTarget(main_character);
 		actors.push_back(intruder);
@@ -67,7 +52,6 @@ void Testlevel::Load()
 	}
 	if (beats_reader == NULL)
 		beats_reader = new BeatsReader();
-
 	if (beats == NULL)
 		beats = beats_reader->getBeats(L"Tutorial.txt");
 
@@ -78,25 +62,20 @@ void Testlevel::Load()
 		);
 }
 
-void Testlevel::Unload()
+void Level1::Unload()
 {
-	SafeRelease(&bmp);
-	if(main_character)
-		delete main_character;
-	if(blocks)
-		delete blocks;
-	if(enemy)
-		delete enemy;
-	if(intruder)
-		delete intruder;
-	if(music)
-		delete music;
-	if(beats_reader)
-		delete beats_reader;
 	SafeRelease(&m_pBitmapBrush);
+	delete main_character;
+	SafeRelease(&bmp);
+	delete collision;
+	delete music;
+	delete enemy;
+	delete beats_reader;
+	delete intruder;
+	delete beats;
 }
 
-void Testlevel::OnRender()
+void Level1::OnRender()
 {
 	D2D1_SIZE_F size = bmp->GetSize();
 	m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
@@ -133,10 +112,10 @@ void Testlevel::OnRender()
 		(*iterator++)->OnRender(m_pRenderTarget);
 
 	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
+
 }
 
-
-void Testlevel::Update(double delta)
+void Level1::Update(double delta)
 {
 	std::sort(actors.begin(), actors.end(), com);
 	time += delta / 1000;
@@ -152,8 +131,7 @@ void Testlevel::Update(double delta)
 		actors[i]->Update(delta);
 	}
 	if (beats->at(beats_index) + 0.19 < time)
-		if(beats_index+1<beats->size())
-			beats_index++;
+		beats_index++;
 	for (int i = 0; i < actors.size(); i++)
 	{
 		if (actors[i]->isDead())
@@ -174,7 +152,7 @@ void Testlevel::Update(double delta)
 					if (collision->AreTheyCollided(actors[i], actors[j]))
 					{
 						collision->HandleCollision(actors[i], actors[j]);
-						//break;
+						break;
 					}
 			}
 		}
@@ -189,12 +167,12 @@ void Testlevel::Update(double delta)
 		load_next_level = true; //if level was clean, load next level
 }
 
-GameLevel* Testlevel::LoadNextLevel()
+GameLevel * Level1::LoadNextLevel()
 {
-	if(load_next_level)
+	if (load_next_level)
 	{
-		return new Level1(m_pRenderTarget);
-	}	
+		return nullptr;
+	}
 	else
 		return this;
 }

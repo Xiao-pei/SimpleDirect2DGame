@@ -19,8 +19,8 @@ private:
 	bool begin_moving;
 	bool facing_left;
 	Audio* player;
-	ID2D1Bitmap* bmp;
-	ID2D1Bitmap* fliped_bmp;
+//	ID2D1Bitmap* bmp;
+//	ID2D1Bitmap* fliped_bmp;
 	D2D_RECT_F character_position_rect;
 public:
 	Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);

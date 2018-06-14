@@ -22,8 +22,6 @@ private:
 	
 	Audio* player;
 	int sound_index;
-	ID2D1Bitmap* bmp;
-	ID2D1Bitmap* fliped_bmp;
 	D2D_RECT_F frame[4];
 	int frame_index;
 	D2D_RECT_F character_position_rect;
