@@ -112,7 +112,7 @@ void Character::Update(double delta)
 			acting = false;
 		}
 	}
-	if (getDestinationX() < -1 || getDestinationY() < -1) //character can't go outside of the map
+	if (getDestinationX() <= 0 || getDestinationY() <= 0) //character can't go outside of the map
 		collidedWithBlock();
 
 	character_position_rect = D2D1::RectF(x_position - width,
@@ -138,11 +138,11 @@ float Character::getDestinationX()
 {
 	if (moving_state == RIGHT)
 	{
-		return x_position + TILE_WIDTH;
+		return x_position + TILE_WIDTH/1.5;
 	}
 	else if (moving_state == LEFT)
 	{
-		return x_position - TILE_WIDTH;
+		return x_position - TILE_WIDTH/1.5;
 	}
 	else
 		return x_position;
@@ -152,11 +152,11 @@ float Character::getDestinationY()
 {
 	if (moving_state==DOWN)
 	{
-		return y_position + TILE_WIDTH;
+		return y_position + TILE_WIDTH/1.5;
 	}
 	else if (moving_state==UP)
 	{
-		return y_position - TILE_WIDTH;
+		return y_position - TILE_WIDTH/1.5;
 	}
 	else
 		return y_position;

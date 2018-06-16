@@ -134,6 +134,6 @@ HRESULT Audio::PlayMusic(const wchar_t* path)
 Audio::~Audio()
 {
 	pSourceVoice->DestroyVoice();
-	//pSourceVoice->DestroyVoice();
+	pMasterVoice->DestroyVoice();
 	SafeRelease(&pXAudio2);
 }

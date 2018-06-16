@@ -102,7 +102,7 @@ void Testlevel::OnRender()
 	m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	//m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(45, D2D1::Point2F(size.width, size.height)));
 
-	D2D1_RECT_F rcBrushRect = D2D1::RectF(0, 0, size.width * 50, size.height * 50);
+	D2D1_RECT_F rcBrushRect = D2D1::RectF(-size.width * 6, -size.height * 5, size.width * 50, size.height * 50);
 	m_pBitmapBrush->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrush->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
 	m_pRenderTarget->FillRectangle(

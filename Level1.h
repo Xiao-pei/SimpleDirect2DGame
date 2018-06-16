@@ -12,7 +12,9 @@ private:
 	Block* blocks = NULL;
 	SimpleCollision* collision = NULL;
 	Invader *enemy = NULL;
+	Invader *invader = NULL;
 	Intruder* intruder = NULL;
+	Intruder* intruder1 = NULL;
 	BeatsReader *beats_reader = NULL;
 	std::vector<float> *beats = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering

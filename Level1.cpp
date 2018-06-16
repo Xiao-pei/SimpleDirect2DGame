@@ -35,14 +35,31 @@ void Level1::Load()
 		enemy->setPosition(2, 2);
 		actors.push_back(enemy);
 	}
+	if(invader==NULL)
+	{
+		invader = new Invader(bitmap_loader_->
+			getBitmap(L"char2.png"),
+			bitmap_loader_->getFlipedBitmap(L"char2.png"));
+		invader->setPosition(10, 10);
+		actors.push_back(invader);
+	}
 	if (intruder == NULL)
 	{
 		intruder = new Intruder(bitmap_loader_->
-			getBitmap(L"char1.png"),
-			bitmap_loader_->getFlipedBitmap(L"char1.png"));
+			getBitmap(L"char3.png"),
+			bitmap_loader_->getFlipedBitmap(L"char3.png"));
 		intruder->setPosition(8, 8);
 		intruder->setTarget(main_character);
 		actors.push_back(intruder);
+	}
+	if(intruder1==NULL)
+	{
+		intruder1 = new Intruder(bitmap_loader_->
+			getBitmap(L"char3.png"),
+			bitmap_loader_->getFlipedBitmap(L"char3.png"));
+		intruder1->setPosition(10, 9);
+		intruder1->setTarget(main_character);
+		actors.push_back(intruder1);
 	}
 	if (music == NULL)
 	{
@@ -81,7 +98,7 @@ void Level1::OnRender()
 	m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	//m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(45, D2D1::Point2F(size.width, size.height)));
 
-	D2D1_RECT_F rcBrushRect = D2D1::RectF(0, 0, size.width * 50, size.height * 50);
+	D2D1_RECT_F rcBrushRect = D2D1::RectF(-size.width * 6, -size.height * 5, size.width * 50, size.height * 50);
 	m_pBitmapBrush->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrush->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
 	m_pRenderTarget->FillRectangle(
@@ -131,7 +148,8 @@ void Level1::Update(double delta)
 		actors[i]->Update(delta);
 	}
 	if (beats->at(beats_index) + 0.19 < time)
-		beats_index++;
+		if (beats_index + 1<beats->size())
+			beats_index++;
 	for (int i = 0; i < actors.size(); i++)
 	{
 		if (actors[i]->isDead())
@@ -152,7 +170,7 @@ void Level1::Update(double delta)
 					if (collision->AreTheyCollided(actors[i], actors[j]))
 					{
 						collision->HandleCollision(actors[i], actors[j]);
-						break;
+						//break;
 					}
 			}
 		}
