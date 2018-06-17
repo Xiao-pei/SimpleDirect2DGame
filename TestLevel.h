@@ -6,8 +6,13 @@
 class Testlevel : public GameLevel
 {
 private:
-	ID2D1Bitmap* bmp = NULL;
-	ID2D1BitmapBrush* m_pBitmapBrush = NULL;
+	ID2D1Bitmap* bmp_floor = NULL;
+	ID2D1Bitmap* bmp_vertical_wall = NULL;
+	ID2D1Bitmap* bmp_vertical_wall_top = NULL;
+	ID2D1Bitmap* bmp_transverse_wall = NULL;
+	ID2D1BitmapBrush* m_pBitmapBrushForFloor = NULL;
+	ID2D1BitmapBrush* m_pBitmapBrushForVerticalWall = NULL;
+	ID2D1BitmapBrush* m_pBitmapBrushForTransverseWall = NULL;
 	SimpleCollision* collision = NULL;
 	Invader *enemy = NULL;
 	Intruder* intruder = NULL;

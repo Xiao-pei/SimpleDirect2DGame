@@ -7,6 +7,8 @@
 Testlevel::~Testlevel()
 {
 	//Testlevel::Unload();
+	SafeRelease(&bmp_floor);
+	SafeRelease(&bmp_vertical_wall);
 	delete blocks;
 	if (enemy)
 		delete enemy;
@@ -14,13 +16,22 @@ Testlevel::~Testlevel()
 		delete intruder;
 	if (beats_reader)
 		delete beats_reader;
-	SafeRelease(&m_pBitmapBrush);
+	SafeRelease(&m_pBitmapBrushForFloor);
+	SafeRelease(&m_pBitmapBrushForVerticalWall);
 }
 
 void Testlevel::Load()
 {
-	if (bmp == NULL)
-		bmp = bitmap_loader_->getBitmap(L"floor-3.png");
+	//bitmaps for the floor and the boundary
+	if (bmp_floor == NULL)
+		bmp_floor = bitmap_loader_->getBitmap(L"floor-3.png");
+	if (bmp_vertical_wall == NULL)
+		bmp_vertical_wall = bitmap_loader_->getBitmap(L"wall-2-mid.png");
+	if (bmp_vertical_wall_top == NULL)
+		bmp_vertical_wall_top = bitmap_loader_->getBitmap(L"wall-2-up.png");
+	if (bmp_transverse_wall == NULL)
+		bmp_transverse_wall = bitmap_loader_->getBitmap(L"wall-2.png");
+
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
@@ -71,16 +82,25 @@ void Testlevel::Load()
 	if (beats == NULL)
 		beats = beats_reader->getBeats(L"Tutorial.txt");
 
-	if (m_pBitmapBrush == NULL)
+	if (m_pBitmapBrushForFloor == NULL)
 		m_pRenderTarget->CreateBitmapBrush(
-			bmp,
-			&m_pBitmapBrush
+			bmp_floor,
+			&m_pBitmapBrushForFloor
+		);
+	if (m_pBitmapBrushForVerticalWall == NULL)
+		m_pRenderTarget->CreateBitmapBrush(
+			bmp_vertical_wall,
+			&m_pBitmapBrushForVerticalWall
+		);
+	if (m_pBitmapBrushForTransverseWall == NULL)
+		m_pRenderTarget->CreateBitmapBrush(
+			bmp_transverse_wall,
+			&m_pBitmapBrushForTransverseWall
 		);
 }
 
 void Testlevel::Unload()
 {
-	SafeRelease(&bmp);
 	if(main_character)
 		delete main_character;
 	if(blocks)
@@ -89,27 +109,50 @@ void Testlevel::Unload()
 		delete enemy;
 	if(intruder)
 		delete intruder;
-	if(music)
+	if (music)
 		delete music;
 	if(beats_reader)
 		delete beats_reader;
-	SafeRelease(&m_pBitmapBrush);
+	
 }
 
 void Testlevel::OnRender()
 {
-	D2D1_SIZE_F size = bmp->GetSize();
+	D2D1_SIZE_F floor_size = bmp_floor->GetSize();
 	m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
-	//m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(45, D2D1::Point2F(size.width, size.height)));
 
-	D2D1_RECT_F rcBrushRect = D2D1::RectF(-size.width * 6, -size.height * 5, size.width * 50, size.height * 50);
-	m_pBitmapBrush->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
-	m_pBitmapBrush->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
+	D2D1_RECT_F rcBrushRect = D2D1::RectF(-floor_size.width * 6, -floor_size.height * 5, floor_size.width * 50, floor_size.height * 50);
+	m_pBitmapBrushForFloor->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
+	m_pBitmapBrushForFloor->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
 	m_pRenderTarget->FillRectangle(
 		&rcBrushRect,
-		m_pBitmapBrush
+		m_pBitmapBrushForFloor
+	);	//draw the floor
+	D2D1_RECT_F rcBrushRectWallTransverse = D2D1::RectF(-bmp_transverse_wall->GetSize().width, -bmp_transverse_wall->GetSize().height,
+		bmp_transverse_wall->GetSize().width*50, 0);
+	m_pBitmapBrushForTransverseWall->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
+	m_pBitmapBrushForTransverseWall->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
+	m_pRenderTarget->FillRectangle(
+		&rcBrushRectWallTransverse,
+		m_pBitmapBrushForTransverseWall
+	);	//draw the top boundary
+	D2D1_SIZE_F top_size = bmp_vertical_wall_top->GetSize();
+	m_pRenderTarget->DrawBitmap(bmp_vertical_wall_top,
+		D2D1::RectF(-top_size.width,-top_size.height,
+			0, 0),									//target rect
+		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+		D2D1::RectF(0, 0,
+			top_size.width,top_size.height)//source rect
 	);
 
+	D2D1_RECT_F rcBrushRectWallVertical = D2D1::RectF(-bmp_vertical_wall->GetSize().width, 0,
+		0, bmp_vertical_wall->GetSize().height * 50);
+	m_pBitmapBrushForVerticalWall->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
+	m_pBitmapBrushForVerticalWall->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
+	
+	m_pRenderTarget->FillRectangle(
+		&rcBrushRectWallVertical,
+		m_pBitmapBrushForVerticalWall);
 	std::vector<Actor*>::iterator iterator = actors.begin();
 	for (int i = 0; i < BLOCKS_NUMBER;)
 	{
