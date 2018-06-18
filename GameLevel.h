@@ -30,7 +30,6 @@ public:
 			return a->getYPosition() < b->getYPosition();
 	}
 	virtual void Load() = 0; //load resources
-	virtual void Unload() = 0; //unload all resources
 	virtual void Update(double delta) = 0; //update
 	virtual void OnRender() = 0; //render
 	virtual GameLevel* LoadNextLevel() = 0; //load next level

@@ -2,10 +2,23 @@
 #include "Level1.h"
 #define BLOCKS_NUMBER 2
 
+Level1::~Level1()
+{
+	SafeRelease(&bmp_floor);
+	if(blocks)
+		delete blocks;
+	if (enemy)
+		delete enemy;
+	if (intruder)
+		delete intruder;
+	if (beats_reader)
+		delete beats_reader;
+}
+
 void Level1::Load()
 {
-	if (bmp == NULL)
-		bmp = bitmap_loader_->getBitmap(L"floor-3.png");
+	if (bmp_floor == NULL)
+		bmp_floor = bitmap_loader_->getBitmap(L"floor-3.png");
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
@@ -74,27 +87,15 @@ void Level1::Load()
 
 	if (m_pBitmapBrush == NULL)
 		m_pRenderTarget->CreateBitmapBrush(
-			bmp,
+			bmp_floor,
 			&m_pBitmapBrush
 		);
 }
 
-void Level1::Unload()
-{
-	SafeRelease(&m_pBitmapBrush);
-	delete main_character;
-	SafeRelease(&bmp);
-	delete collision;
-	delete music;
-	delete enemy;
-	delete beats_reader;
-	delete intruder;
-	delete beats;
-}
 
 void Level1::OnRender()
 {
-	D2D1_SIZE_F size = bmp->GetSize();
+	D2D1_SIZE_F size = bmp_floor->GetSize();
 	m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	//m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(45, D2D1::Point2F(size.width, size.height)));
 

@@ -99,23 +99,6 @@ void Testlevel::Load()
 		);
 }
 
-void Testlevel::Unload()
-{
-	if(main_character)
-		delete main_character;
-	if(blocks)
-		delete blocks;
-	if(enemy)
-		delete enemy;
-	if(intruder)
-		delete intruder;
-	if (music)
-		delete music;
-	if(beats_reader)
-		delete beats_reader;
-	
-}
-
 void Testlevel::OnRender()
 {
 	D2D1_SIZE_F floor_size = bmp_floor->GetSize();
@@ -128,31 +111,53 @@ void Testlevel::OnRender()
 		&rcBrushRect,
 		m_pBitmapBrushForFloor
 	);	//draw the floor
-	D2D1_RECT_F rcBrushRectWallTransverse = D2D1::RectF(-bmp_transverse_wall->GetSize().width, -bmp_transverse_wall->GetSize().height,
+
+	D2D1_RECT_F rcBrushRectWallTransverseTop = D2D1::RectF(-bmp_transverse_wall->GetSize().width, -bmp_transverse_wall->GetSize().height,
 		bmp_transverse_wall->GetSize().width*50, 0);
+	D2D1_RECT_F rcBrushRectWallTransverseButton = D2D1::RectF(-TILE_WIDTH, 50* TILE_WIDTH,
+		TILE_WIDTH * 51, 50 * TILE_WIDTH+bmp_transverse_wall->GetSize().height);
 	m_pBitmapBrushForTransverseWall->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrushForTransverseWall->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
 	m_pRenderTarget->FillRectangle(
-		&rcBrushRectWallTransverse,
+		&rcBrushRectWallTransverseTop,
 		m_pBitmapBrushForTransverseWall
 	);	//draw the top boundary
+	
+
 	D2D1_SIZE_F top_size = bmp_vertical_wall_top->GetSize();
 	m_pRenderTarget->DrawBitmap(bmp_vertical_wall_top,
 		D2D1::RectF(-top_size.width,-top_size.height,
-			0, 0),									//target rect
+			0, 0),						//target rect
 		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 		D2D1::RectF(0, 0,
 			top_size.width,top_size.height)//source rect
 	);
+	m_pRenderTarget->DrawBitmap(bmp_vertical_wall_top,
+		D2D1::RectF(50*top_size.width, -top_size.height,
+			51 * top_size.width, 0),		//target rect
+		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+		D2D1::RectF(0, 0,
+			top_size.width, top_size.height)//source rect
+	);
 
-	D2D1_RECT_F rcBrushRectWallVertical = D2D1::RectF(-bmp_vertical_wall->GetSize().width, 0,
+	D2D1_RECT_F rcBrushRectWallVerticalLeft = D2D1::RectF(-bmp_vertical_wall->GetSize().width, 0,
 		0, bmp_vertical_wall->GetSize().height * 50);
+	D2D1_RECT_F rcBrushRectWallVerticalRight = D2D1::RectF(50*bmp_vertical_wall->GetSize().width, 0,
+		51 * bmp_vertical_wall->GetSize().width, bmp_vertical_wall->GetSize().height * 50);
 	m_pBitmapBrushForVerticalWall->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrushForVerticalWall->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
-	
 	m_pRenderTarget->FillRectangle(
-		&rcBrushRectWallVertical,
-		m_pBitmapBrushForVerticalWall);
+		&rcBrushRectWallVerticalLeft,
+		m_pBitmapBrushForVerticalWall);//draw the left bundary
+	m_pRenderTarget->FillRectangle(
+		&rcBrushRectWallVerticalRight,
+		m_pBitmapBrushForVerticalWall);//draw the right bundary
+
+	m_pRenderTarget->FillRectangle(
+		&rcBrushRectWallTransverseButton,
+		m_pBitmapBrushForTransverseWall
+	);	//draw the button boundary
+
 	std::vector<Actor*>::iterator iterator = actors.begin();
 	for (int i = 0; i < BLOCKS_NUMBER;)
 	{
@@ -217,7 +222,6 @@ void Testlevel::Update(double delta)
 					if (collision->AreTheyCollided(actors[i], actors[j]))
 					{
 						collision->HandleCollision(actors[i], actors[j]);
-						//break;
 					}
 			}
 		}

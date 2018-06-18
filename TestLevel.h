@@ -61,7 +61,6 @@ public:
 	}
 	~Testlevel();
 	void Load() override;
-	void Unload() override;
 	void OnRender() override;
 	void Update(double delta) override;
 	GameLevel* LoadNextLevel() override;

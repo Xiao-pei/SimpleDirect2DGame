@@ -6,7 +6,7 @@ class Level1 :
 	public GameLevel
 {
 private:
-	ID2D1Bitmap * bmp = NULL;
+	ID2D1Bitmap * bmp_floor = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrush = NULL;
 	Character* main_character = NULL;
 	Block* blocks = NULL;
@@ -38,9 +38,10 @@ public:
 		m_pRenderTarget = rt;
 		bitmap_loader_ = new BitmapLoader(m_pRenderTarget);
 	}
+	~Level1();
 	void Load() override;
-	void Unload() override;
 	void OnRender() override;
 	void Update(double delta) override;
 	GameLevel* LoadNextLevel() override;
+
 };

@@ -17,7 +17,7 @@ void Game::DiscardDeviceResources()
 void Game::LoadLevel() //load level and reset timer
 {
 	timer->Reset();
-	currentLevel = new Testlevel(m_pRenderTarget);
+	currentLevel = new StartScreen(m_pRenderTarget);
 	currentLevel->Load();
 }
 
@@ -65,7 +65,7 @@ Game::Game()
 
 Game::~Game() //relaease resources
 {
-	currentLevel->Unload();
+	delete currentLevel;
 	SafeRelease(&m_pRenderTarget);
 	SafeRelease(&m_pDirect2dFactory);
 }

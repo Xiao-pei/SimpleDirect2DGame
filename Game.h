@@ -3,6 +3,7 @@
 #include "GameLevel.h"
 #include "TestLevel.h"
 #include "resource.h"
+#include "StartScreen.h"
 #include "Timer.h"
 
 class Game//ÓÎÏ·Ö÷Àà

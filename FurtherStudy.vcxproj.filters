@@ -75,6 +75,9 @@
     <ClInclude Include="Level1.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="StartScreen.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -121,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="Intruder.cpp">
       <Filter>源文件\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="StartScreen.cpp">
+      <Filter>源文件\GameLevel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

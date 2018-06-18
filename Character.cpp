@@ -112,7 +112,7 @@ void Character::Update(double delta)
 			acting = false;
 		}
 	}
-	if (getDestinationX() <= 0 || getDestinationY() <= 0) //character can't go outside of the map
+	if (getDestinationX() <= 0 || getDestinationY() <= 0||getDestinationX()>51*TILE_WIDTH||getDestinationY()>51*TILE_WIDTH) //character can't go outside of the map
 		collidedWithBlock();
 
 	character_position_rect = D2D1::RectF(x_position - width,
