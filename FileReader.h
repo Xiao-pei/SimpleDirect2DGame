@@ -1,13 +1,12 @@
 #pragma once
 #include<vector>
 #include<fstream>
-class BeatsReader
+class FileReader
 {
-private:
-	std::vector<float> *vector;
 public:
-	BeatsReader();
-	~BeatsReader();
+	FileReader()=default;
+	~FileReader()=default;
 	std::vector<float> * getBeats(const wchar_t* path);
+	std::vector<int> * getMap(char const* path);
 };
 

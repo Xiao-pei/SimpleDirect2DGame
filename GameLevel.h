@@ -9,7 +9,7 @@
 #include "Actor.h"
 #include "Invader.h"
 #include "Intruder.h"
-#include "BeatsReader.h"
+#include "FileReader.h"
 
 class GameLevel
 {

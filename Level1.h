@@ -9,13 +9,13 @@ private:
 	ID2D1Bitmap * bmp_floor = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrush = NULL;
 	Character* main_character = NULL;
-	Block* blocks = NULL;
+	std::vector<Block*> blocks;
 	SimpleCollision* collision = NULL;
 	Invader *enemy = NULL;
 	Invader *invader = NULL;
 	Intruder* intruder = NULL;
 	Intruder* intruder1 = NULL;
-	BeatsReader *beats_reader = NULL;
+	FileReader *file_reader = NULL;
 	std::vector<float> *beats = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering
 
@@ -26,11 +26,7 @@ private:
 	//folowing variables described "camera" position
 	float grid_x = 0;
 	float grid_y = 0;
-	int blocks_position[2][3] =
-	{
-		1,1,3,
-		0,2,3,
-	};
+	std::vector<int> * blocks_position = NULL;
 public:
 	Level1(ID2D1HwndRenderTarget* rt)
 	{

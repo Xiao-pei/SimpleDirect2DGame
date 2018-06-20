@@ -26,7 +26,7 @@ void StartScreen::Update(double delta)
 void StartScreen::Load()
 {
 	if (bitmap == NULL)
-		bitmap = bitmap_loader_->getBitmap(L"B.jpg");
+		bitmap = bitmap_loader_->getBitmap(L"mainmenudemo.png");
 }
 
 GameLevel* StartScreen::LoadNextLevel()

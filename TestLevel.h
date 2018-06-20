@@ -16,7 +16,7 @@ private:
 	SimpleCollision* collision = NULL;
 	Invader *enemy = NULL;
 	Intruder* intruder = NULL;
-	BeatsReader *beats_reader = NULL;
+	FileReader *beats_reader = NULL;
 	std::vector<float> *beats = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering
 

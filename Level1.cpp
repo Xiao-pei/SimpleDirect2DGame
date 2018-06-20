@@ -1,24 +1,25 @@
 #include "stdafx.h"
 #include "Level1.h"
-#define BLOCKS_NUMBER 2
 
 Level1::~Level1()
 {
 	SafeRelease(&bmp_floor);
-	if(blocks)
-		delete blocks;
 	if (enemy)
 		delete enemy;
 	if (intruder)
 		delete intruder;
-	if (beats_reader)
-		delete beats_reader;
+	if (file_reader)
+		delete file_reader;
 }
 
 void Level1::Load()
 {
 	if (bmp_floor == NULL)
 		bmp_floor = bitmap_loader_->getBitmap(L"floor-3.png");
+	if (file_reader == NULL)
+		file_reader = new FileReader();
+	if (beats == NULL)
+		beats = file_reader->getBeats(L"MOON.txt");
 	if (main_character == NULL)
 	{
 		main_character = new Character(bitmap_loader_->
@@ -26,18 +27,23 @@ void Level1::Load()
 			bitmap_loader_->getFlipedBitmap(L"char1.png"));
 		actors.push_back(main_character);
 	}
-	if (blocks == NULL)
+	if(blocks_position==NULL)
 	{
-		blocks = new Block[BLOCKS_NUMBER];
-		for (int i = 0; i < BLOCKS_NUMBER; ++i)
+		blocks_position = file_reader->getMap("a.txt");
+	}
+	if (blocks.size()==0)
+	{
+		for (int i = 0; i < blocks_position->size(); i+=3)
 		{
-			if (blocks_position[i][0] == 0)
-				blocks[i].initBlock(bitmap_loader_->
+			Block* block = new Block();
+			if (blocks_position->at(i) == 0)
+				block->initBlock(bitmap_loader_->
 					getBitmap(L"wall-2.png"));
 			else
-				blocks[i].initDestroyableBlock(bitmap_loader_->
+				block->initDestroyableBlock(bitmap_loader_->
 					getBitmap(L"wall-1.png"));
-			blocks[i].setPosition(blocks_position[i][1], blocks_position[i][2]);
+			block->setPosition(blocks_position->at(i+1), blocks_position->at(i+2));
+			blocks.push_back(block);
 		}
 	}
 	if (enemy == NULL)
@@ -80,10 +86,6 @@ void Level1::Load()
 		music->PlayMusic(L"MOON.wav");
 		time = 0;
 	}
-	if (beats_reader == NULL)
-		beats_reader = new BeatsReader();
-	if (beats == NULL)
-		beats = beats_reader->getBeats(L"MOON.txt");
 
 	if (m_pBitmapBrush == NULL)
 		m_pRenderTarget->CreateBitmapBrush(
@@ -108,12 +110,12 @@ void Level1::OnRender()
 	);
 
 	std::vector<Actor*>::iterator iterator = actors.begin();
-	for (int i = 0; i < BLOCKS_NUMBER;)
+	for (int i = 0; i < blocks.size();)
 	{
-		if (iterator != actors.end() && blocks[i].isAboveCharacter((*iterator)->getYPosition()))
+		if (iterator != actors.end() && blocks[i]->isAboveCharacter((*iterator)->getYPosition()))
 			//blocks above character render first
 		{
-			blocks[i++].OnRender(m_pRenderTarget);
+			blocks[i++]->OnRender(m_pRenderTarget);
 		}
 		else
 		{
@@ -123,7 +125,7 @@ void Level1::OnRender()
 				++iterator;
 			}
 			else
-				blocks[i++].OnRender(m_pRenderTarget);
+				blocks[i++]->OnRender(m_pRenderTarget);
 		}
 	}
 	while (iterator != actors.end()) //draw the rest character
@@ -137,9 +139,9 @@ void Level1::Update(double delta)
 {
 	std::sort(actors.begin(), actors.end(), com);
 	time += delta / 1000;
-	for (int i = 0; i < BLOCKS_NUMBER; ++i)
+	for (int i = 0; i < blocks.size(); ++i)
 	{
-		blocks[i].Update(delta);
+		blocks[i]->Update(delta);
 	}
 	for (int i = 0; i < actors.size(); i++)
 	{
@@ -157,11 +159,11 @@ void Level1::Update(double delta)
 			actors.erase(actors.begin() + i);
 		else if (actors[i]->isAboutToMove()) //if character is about to move, begin to detect collision
 		{
-			for (int j = 0; j < BLOCKS_NUMBER; j++)
+			for (int j = 0; j < blocks.size(); j++)
 			{
-				if (collision->AreTheyCollided(actors[i], &blocks[j]))
+				if (collision->AreTheyCollided(actors[i], blocks[j]))
 				{
-					collision->HandleCollision(actors[i], &blocks[j]);
+					collision->HandleCollision(actors[i], blocks[j]);
 					break;
 				}
 			}

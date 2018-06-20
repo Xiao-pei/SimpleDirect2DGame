@@ -77,7 +77,7 @@ void Testlevel::Load()
 		time = 0;
 	}
 	if (beats_reader == NULL)
-		beats_reader = new BeatsReader();
+		beats_reader = new FileReader();
 
 	if (beats == NULL)
 		beats = beats_reader->getBeats(L"Tutorial.txt");
@@ -194,12 +194,12 @@ void Testlevel::Update(double delta)
 	}
 	for (int i = 0; i < actors.size(); i++)
 	{
-		if (abs(beats->at(beats_index) - time) < 0.2)
+		if (abs(beats->at(beats_index) - time) < 0.19)
 			actors[i]->setMovingEnable(true);
 		else { actors[i]->setMovingEnable(false); }
 		actors[i]->Update(delta);
 	}
-	if (beats->at(beats_index) + 0.19 < time)
+	if (beats->at(beats_index) + 0.195 < time)
 		if(beats_index+1<beats->size())
 			beats_index++;
 	for (int i = 0; i < actors.size(); i++)

@@ -69,13 +69,13 @@
     <ClInclude Include="Intruder.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="BeatsReader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Level1.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="StartScreen.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FileReader.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,9 +116,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="BeatsReader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Level1.cpp">
       <Filter>源文件\GameLevel</Filter>
     </ClCompile>
@@ -127,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="StartScreen.cpp">
       <Filter>源文件\GameLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="FileReader.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
