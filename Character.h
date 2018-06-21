@@ -27,7 +27,7 @@ private:
 	D2D_RECT_F character_position_rect;
 
 public:
-	Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
+	Character(ID2D1HwndRenderTarget* rt);
 	void Update(double delta) override;
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget) override;
 	float getDestinationX() override;

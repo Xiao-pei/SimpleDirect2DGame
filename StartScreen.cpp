@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "StartScreen.h"
 #include "TestLevel.h"
+#include"KbManager.h"
+#include "Level1.h"
 
 
 StartScreen::~StartScreen()
@@ -19,7 +21,7 @@ void StartScreen::OnRender()
 void StartScreen::Update(double delta)
 {
 	time += delta/1000;
-	if (time > 10)
+	if (KbManager::isSpaceDown())
 		load_next_level = true;
 }
 

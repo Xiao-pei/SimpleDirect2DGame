@@ -19,7 +19,6 @@ protected:
 	BitmapLoader* bitmap_loader_ = NULL;
 	Audio* music = NULL;
 	Character* main_character = NULL;
-	Block* blocks = NULL;
 public:
 	
 	static bool com(Actor* a, Actor* b)
@@ -38,7 +37,6 @@ public:
 	{
 		delete music;
 		delete main_character;
-		//delete blocks;
 	}
 };
 

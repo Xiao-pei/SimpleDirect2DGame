@@ -4,13 +4,14 @@
 #include "KbManager.h"
 
 
-Character::Character(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
+Character::Character(ID2D1HwndRenderTarget* rt)
 {
 	jump_time = 0.0f;
 	life = 4;
 	time = jump_time;
-	bmp = bitmap;
-	fliped_bmp = fliped_bitmap;
+	bitmap_loader = new BitmapLoader(rt);
+	bmp = bitmap_loader->getBitmap(L"char1.png");
+	fliped_bmp = bitmap_loader->getFlipedBitmap(L"char1.png");
 	width = bmp->GetSize().width / 4;
 	height = bmp->GetSize().height;
 	player = new Audio();
@@ -50,7 +51,6 @@ void Character::Update(double delta)
 		if (!acting)
 		{
 			acting = true;
-			begin_moving = true;
 		}
 	}
 	if (acting && moving_enable&&!moving)
@@ -70,6 +70,7 @@ void Character::Update(double delta)
 			facing_left = false;
 		}
 		else;
+		begin_moving = true;
 		jump_time = 0;
 		last_y_position = y_position;
 		last_x_position = x_position;
@@ -77,7 +78,7 @@ void Character::Update(double delta)
 	}
 	else { KbManager::discardMessage(); }
 
-	if (moving )
+	if (moving)
 	{
 		if (moving_state == DOWN)
 		{
@@ -109,6 +110,7 @@ void Character::Update(double delta)
 				y_position = last_y_position;
 			moving_state = STILL;
 			moving = false;
+			moving_enable = false;
 			acting = false;
 		}
 	}
@@ -167,7 +169,8 @@ bool Character::isAboutToMove()
 {
 	if (begin_moving)
 	{
-		begin_moving = false;
+		if (jump_time > jump_time_length / 2)
+			begin_moving = false;
 		return true;
 	}
 	else

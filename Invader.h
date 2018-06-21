@@ -8,6 +8,9 @@ private:
 	double jump_time;
 	const float jump_time_length = 0.3;
 	D2D_RECT_F frame[4];
+	D2D_RECT_F heart_frame[5];
+	ID2D1Bitmap* heart_full;
+	ID2D1Bitmap* heart_empty;
 
 	float last_x_position;
 	float last_y_position;
@@ -19,11 +22,9 @@ private:
 	bool begin_moving;
 	bool facing_left;
 	Audio* player;
-//	ID2D1Bitmap* bmp;
-//	ID2D1Bitmap* fliped_bmp;
 	D2D_RECT_F character_position_rect;
 public:
-	Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap);
+	Invader(ID2D1HwndRenderTarget* rt);
 	~Invader();
 	void Update(double delta) override;
 	void OnRender(ID2D1HwndRenderTarget* pRenderTarget) override;

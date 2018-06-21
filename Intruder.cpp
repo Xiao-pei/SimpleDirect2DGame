@@ -3,14 +3,15 @@
 #include "Saferelease.h"
 
 
-Intruder::Intruder(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
+Intruder::Intruder(ID2D1HwndRenderTarget* rt)
 {
 	jump_time = 0.0f;
 	collide_count = 0;
 	life = 3;
 	time = 0.0f;
-	bmp = bitmap;
-	fliped_bmp = fliped_bitmap;
+	bitmap_loader = new BitmapLoader(rt);
+	bmp = bitmap_loader->getBitmap(L"char3.png");
+	fliped_bmp = bitmap_loader->getFlipedBitmap(L"char3.png");
 	width = bmp->GetSize().width / 4;
 	height = bmp->GetSize().height;
 	for (int i = 0; i < 4; i++) // create my frame rect

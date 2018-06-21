@@ -9,13 +9,14 @@ Testlevel::~Testlevel()
 	//Testlevel::Unload();
 	SafeRelease(&bmp_floor);
 	SafeRelease(&bmp_vertical_wall);
-	delete blocks;
+	SafeRelease(&bmp_vertical_wall_top);
+	SafeRelease(&bmp_transverse_wall);
 	if (enemy)
 		delete enemy;
 	if (intruder)
 		delete intruder;
-	if (beats_reader)
-		delete beats_reader;
+	if (file_reader)
+		delete file_reader;
 	SafeRelease(&m_pBitmapBrushForFloor);
 	SafeRelease(&m_pBitmapBrushForVerticalWall);
 }
@@ -32,40 +33,45 @@ void Testlevel::Load()
 	if (bmp_transverse_wall == NULL)
 		bmp_transverse_wall = bitmap_loader_->getBitmap(L"wall-2.png");
 
-	if (main_character == NULL)
+
+	if (file_reader == NULL)
+		file_reader = new FileReader();
+	if (beats == NULL)
+		beats = file_reader->getBeats(L"Tutorial.txt");
+	if (blocks_position == NULL)
 	{
-		main_character = new Character(bitmap_loader_->
-		                               getBitmap(L"char1.png"),
-		                               bitmap_loader_->getFlipedBitmap(L"char1.png"));
-		actors.push_back(main_character);
+		blocks_position = file_reader->getMap("a.txt");
 	}
-	if (blocks == NULL)
+	if (blocks.size() == 0)
 	{
-		blocks = new Block[BLOCKS_NUMBER];
-		for (int i = 0; i < BLOCKS_NUMBER; ++i)
+		for (int i = 0; i < blocks_position->size(); i += 3)
 		{
-			if (blocks_position[i][0] == 0)
-				blocks[i].initBlock(bitmap_loader_->
+			Block* block = new Block();
+			if (blocks_position->at(i) == 0)
+				block->initBlock(bitmap_loader_->
 					getBitmap(L"wall-2.png"));
 			else
-				blocks[i].initDestroyableBlock(bitmap_loader_->
+				block->initDestroyableBlock(bitmap_loader_->
 					getBitmap(L"wall-1.png"));
-			blocks[i].setPosition(blocks_position[i][1], blocks_position[i][2]);
+			block->setPosition(blocks_position->at(i + 1), blocks_position->at(i + 2));
+			blocks.push_back(block);
 		}
+	}
+
+	if (main_character == NULL)
+	{
+		main_character = new Character(m_pRenderTarget);
+		actors.push_back(main_character);
 	}
 	if (enemy == NULL)
 	{
-		enemy = new Invader(bitmap_loader_->
-		                    getBitmap(L"char2.png"),
-		                    bitmap_loader_->getFlipedBitmap(L"char2.png"));
+		enemy = new Invader(m_pRenderTarget);
 		enemy->setPosition(6, 6);
 		actors.push_back(enemy);
 	}
 	if(intruder==NULL)
 	{
-		intruder=new Intruder(bitmap_loader_->
-			getBitmap(L"char3.png"),
-			bitmap_loader_->getFlipedBitmap(L"char3.png"));
+		intruder=new Intruder(m_pRenderTarget);
 		intruder->setPosition(8, 8);
 		intruder->setTarget(main_character);
 		actors.push_back(intruder);
@@ -76,11 +82,7 @@ void Testlevel::Load()
 		music->PlayMusic(L"Tutorial.wav");
 		time = 0;
 	}
-	if (beats_reader == NULL)
-		beats_reader = new FileReader();
 
-	if (beats == NULL)
-		beats = beats_reader->getBeats(L"Tutorial.txt");
 
 	if (m_pBitmapBrushForFloor == NULL)
 		m_pRenderTarget->CreateBitmapBrush(
@@ -159,12 +161,12 @@ void Testlevel::OnRender()
 	);	//draw the button boundary
 
 	std::vector<Actor*>::iterator iterator = actors.begin();
-	for (int i = 0; i < BLOCKS_NUMBER;)
+	for (int i = 0; i < blocks.size();)
 	{
-		if (iterator != actors.end() && blocks[i].isAboveCharacter((*iterator)->getYPosition()))
+		if (iterator != actors.end() && blocks[i]->isAboveCharacter((*iterator)->getYPosition()))
 			//blocks above character render first
 		{
-			blocks[i++].OnRender(m_pRenderTarget);
+			blocks[i++]->OnRender(m_pRenderTarget);
 		}
 		else
 		{
@@ -174,7 +176,7 @@ void Testlevel::OnRender()
 				++iterator;
 			}
 			else
-				blocks[i++].OnRender(m_pRenderTarget);
+				blocks[i++]->OnRender(m_pRenderTarget);
 		}
 	}
 	while (iterator != actors.end()) //draw the rest character
@@ -188,18 +190,20 @@ void Testlevel::Update(double delta)
 {
 	std::sort(actors.begin(), actors.end(), com);
 	time += delta / 1000;
-	for (int i = 0; i < BLOCKS_NUMBER; ++i)
+	for (int i = 0; i < blocks.size(); ++i)
 	{
-		blocks[i].Update(delta);
+		blocks[i]->Update(delta);
 	}
 	for (int i = 0; i < actors.size(); i++)
 	{
-		if (abs(beats->at(beats_index) - time) < 0.19)
+		if (abs(beats->at(beats_index) - time) < 0.13)
 			actors[i]->setMovingEnable(true);
 		else { actors[i]->setMovingEnable(false); }
 		actors[i]->Update(delta);
 	}
-	if (beats->at(beats_index) + 0.195 < time)
+	if (abs(beats->at(beats_index) - time) < 0.149)
+		main_character->setMovingEnable(true);
+	if (beats->at(beats_index) + 0.16 < time)
 		if(beats_index+1<beats->size())
 			beats_index++;
 	for (int i = 0; i < actors.size(); i++)
@@ -208,12 +212,11 @@ void Testlevel::Update(double delta)
 			actors.erase(actors.begin() + i);
 		else if (actors[i]->isAboutToMove()) //if character is about to move, begin to detect collision
 		{
-			for (int j = 0; j < BLOCKS_NUMBER; j++)
+			for (int j = 0; j < blocks.size(); j++)
 			{
-				if (collision->AreTheyCollided(actors[i], &blocks[j]))
+				if (collision->AreTheyCollided(actors[i], blocks[j]))
 				{
-					collision->HandleCollision(actors[i], &blocks[j]);
-					break;
+					collision->HandleCollision(actors[i], blocks[j]);
 				}
 			}
 			for (int j = 0; j < actors.size(); j++)

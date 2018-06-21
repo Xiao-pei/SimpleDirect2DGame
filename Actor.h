@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Audio.h"
 #include "Saferelease.h"
+#include "BitmapLoader.h"
 
 class Actor
 {
@@ -16,12 +17,15 @@ protected:
 	bool moving_enable;
 	ID2D1Bitmap* bmp;
 	ID2D1Bitmap* fliped_bmp;
+	BitmapLoader* bitmap_loader;
 public:
 	Actor() = default;
 	virtual ~Actor()
 	{
 		SafeRelease(&bmp);
 		SafeRelease(&fliped_bmp);
+		if (bitmap_loader)
+			delete bitmap_loader;
 	}
 	virtual void Update(double delta) = 0; //update
 	virtual void OnRender(ID2D1HwndRenderTarget* pRenderTarget) = 0;
@@ -31,6 +35,7 @@ public:
 	bool isDead() { return dead; }
 	float getXPosition() { return x_position; }
 	float getYPosition() { return y_position; }
+	int getLife() { return life; }
 	virtual void setMovingEnable(bool e) { moving_enable = e; }
 	//	virtual void setMovingEnable(bool b);
 	virtual float getDestinationX() = 0;

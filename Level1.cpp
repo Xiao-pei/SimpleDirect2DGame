@@ -22,9 +22,7 @@ void Level1::Load()
 		beats = file_reader->getBeats(L"MOON.txt");
 	if (main_character == NULL)
 	{
-		main_character = new Character(bitmap_loader_->
-			getBitmap(L"char1.png"),
-			bitmap_loader_->getFlipedBitmap(L"char1.png"));
+		main_character = new Character(m_pRenderTarget);
 		actors.push_back(main_character);
 	}
 	if(blocks_position==NULL)
@@ -48,34 +46,26 @@ void Level1::Load()
 	}
 	if (enemy == NULL)
 	{
-		enemy = new Invader(bitmap_loader_->
-			getBitmap(L"char2.png"),
-			bitmap_loader_->getFlipedBitmap(L"char2.png"));
+		enemy = new Invader(m_pRenderTarget);
 		enemy->setPosition(2, 2);
 		actors.push_back(enemy);
 	}
 	if(invader==NULL)
 	{
-		invader = new Invader(bitmap_loader_->
-			getBitmap(L"char2.png"),
-			bitmap_loader_->getFlipedBitmap(L"char2.png"));
+		invader = new Invader(m_pRenderTarget);
 		invader->setPosition(10, 10);
 		actors.push_back(invader);
 	}
 	if (intruder == NULL)
 	{
-		intruder = new Intruder(bitmap_loader_->
-			getBitmap(L"char3.png"),
-			bitmap_loader_->getFlipedBitmap(L"char3.png"));
+		intruder = new Intruder(m_pRenderTarget);
 		intruder->setPosition(8, 8);
 		intruder->setTarget(main_character);
 		actors.push_back(intruder);
 	}
 	if(intruder1==NULL)
 	{
-		intruder1 = new Intruder(bitmap_loader_->
-			getBitmap(L"char3.png"),
-			bitmap_loader_->getFlipedBitmap(L"char3.png"));
+		intruder1 = new Intruder(m_pRenderTarget);
 		intruder1->setPosition(10, 9);
 		intruder1->setTarget(main_character);
 		actors.push_back(intruder1);
@@ -145,11 +135,13 @@ void Level1::Update(double delta)
 	}
 	for (int i = 0; i < actors.size(); i++)
 	{
-		if (abs(beats->at(beats_index) - time) < 0.15)
+		if (abs(beats->at(beats_index) - time) < 0.13)
 			actors[i]->setMovingEnable(true);
 		else { actors[i]->setMovingEnable(false); }
 		actors[i]->Update(delta);
 	}
+	if (abs(beats->at(beats_index) - time) < 0.16)
+		main_character->setMovingEnable(true);//special benefit for character
 	if (beats->at(beats_index) + 0.16 < time)
 		if (beats_index + 1<beats->size())
 			beats_index++;

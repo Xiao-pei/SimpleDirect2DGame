@@ -3,14 +3,17 @@
 #include "Saferelease.h"
 
 
-Invader::Invader(ID2D1Bitmap* bitmap, ID2D1Bitmap* fliped_bitmap)
+Invader::Invader(ID2D1HwndRenderTarget* rt)
 {
 	time = 0.0f;
 	life = 2;
 	jump_time = 0.0f;
 	last_jump_time = 0.0f;
-	bmp = bitmap;
-	fliped_bmp = fliped_bitmap;
+	bitmap_loader = new BitmapLoader(rt);
+	bmp = bitmap_loader->getBitmap(L"char2.png");
+	fliped_bmp = bitmap_loader->getFlipedBitmap(L"char2.png");
+	heart_full = bitmap_loader->getBitmap(L"heart-full.png");
+	heart_empty = bitmap_loader->getBitmap(L"heart-empty.png");
 	width = bmp->GetSize().width / 4;
 	height = bmp->GetSize().height;
 	player = new Audio();
