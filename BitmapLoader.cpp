@@ -76,8 +76,3 @@ HRESULT BitmapLoader::createBitmap(const wchar_t* path, const bool flip)
 	return hr;
 }
 
-BitmapLoader::~BitmapLoader()
-{
-	if (bmp)
-		bmp->Release();
-}

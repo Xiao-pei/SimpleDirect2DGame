@@ -2,7 +2,7 @@
 #include "Actor.h"
 #include "Audio.h"
 
-class Character:public Actor
+class Character : public Actor
 {
 private:
 	float last_x_position;
@@ -19,7 +19,7 @@ private:
 	bool facing_left;
 
 	const float jump_time_length = 0.3;
-	
+
 	Audio* player;
 	int sound_index;
 	D2D_RECT_F frame[4];

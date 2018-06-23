@@ -6,19 +6,25 @@
 
 Testlevel::~Testlevel()
 {
-	//Testlevel::Unload();
 	SafeRelease(&bmp_floor);
 	SafeRelease(&bmp_vertical_wall);
 	SafeRelease(&bmp_vertical_wall_top);
 	SafeRelease(&bmp_transverse_wall);
+	SafeRelease(&bmp_full_life_bar);
+	SafeRelease(&bmp_empty_life_bar);
+	SafeRelease(&m_pBitmapBrushForFloor);
+	SafeRelease(&m_pBitmapBrushForVerticalWall);
+	SafeRelease(&m_pBitmapBrushForTransverseWall);
+	if (beats)
+		delete beats;
+	if (blocks_position)
+		delete blocks_position;
+	if (file_reader)
+		delete file_reader;
 	if (enemy)
 		delete enemy;
 	if (intruder)
 		delete intruder;
-	if (file_reader)
-		delete file_reader;
-	SafeRelease(&m_pBitmapBrushForFloor);
-	SafeRelease(&m_pBitmapBrushForVerticalWall);
 }
 
 void Testlevel::Load()
@@ -32,7 +38,10 @@ void Testlevel::Load()
 		bmp_vertical_wall_top = bitmap_loader_->getBitmap(L"wall-2-up.png");
 	if (bmp_transverse_wall == NULL)
 		bmp_transverse_wall = bitmap_loader_->getBitmap(L"wall-2.png");
-
+	if (bmp_full_life_bar == NULL)
+		bmp_full_life_bar = bitmap_loader_->getBitmap(L"life-full.png");
+	if (bmp_empty_life_bar == NULL)
+		bmp_empty_life_bar = bitmap_loader_->getBitmap(L"life-empty.png");
 
 	if (file_reader == NULL)
 		file_reader = new FileReader();
@@ -58,9 +67,18 @@ void Testlevel::Load()
 		}
 	}
 
+	
+	if (music == NULL)
+	{
+		music = new Audio();
+		music->PlayMusic(L"Tutorial.wav");
+		time = 0;
+	}
 	if (main_character == NULL)
 	{
 		main_character = new Character(m_pRenderTarget);
+		full_life_num = main_character->getLife();
+		life_bar_position = new D2D_RECT_F[full_life_num];
 		actors.push_back(main_character);
 	}
 	if (enemy == NULL)
@@ -69,20 +87,13 @@ void Testlevel::Load()
 		enemy->setPosition(6, 6);
 		actors.push_back(enemy);
 	}
-	if(intruder==NULL)
+	if (intruder == NULL)
 	{
-		intruder=new Intruder(m_pRenderTarget);
+		intruder = new Intruder(m_pRenderTarget);
 		intruder->setPosition(8, 8);
 		intruder->setTarget(main_character);
 		actors.push_back(intruder);
 	}
-	if (music == NULL)
-	{
-		music = new Audio();
-		music->PlayMusic(L"Tutorial.wav");
-		time = 0;
-	}
-
 
 	if (m_pBitmapBrushForFloor == NULL)
 		m_pRenderTarget->CreateBitmapBrush(
@@ -181,6 +192,19 @@ void Testlevel::OnRender()
 	}
 	while (iterator != actors.end()) //draw the rest character
 		(*iterator++)->OnRender(m_pRenderTarget);
+	
+	D2D1_RECT_F life_bar_source=D2D1::RectF(0,0,bmp_full_life_bar->GetSize().width,bmp_full_life_bar->GetSize().height);
+	for(int i=0;i<full_life_num;i++)
+	{
+		if (i < current_life_num)
+			m_pRenderTarget->DrawBitmap(bmp_full_life_bar, life_bar_position[i],
+				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				life_bar_source);
+		else
+			m_pRenderTarget->DrawBitmap(bmp_empty_life_bar, life_bar_position[i],
+				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				life_bar_source);
+	}
 
 	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
 }
@@ -201,11 +225,13 @@ void Testlevel::Update(double delta)
 		else { actors[i]->setMovingEnable(false); }
 		actors[i]->Update(delta);
 	}
-	if (abs(beats->at(beats_index) - time) < 0.149)
+	current_life_num = main_character->getLife(); //update health bar info
+	if (abs(beats->at(beats_index) - time) < 0.149)//special benefit for character
 		main_character->setMovingEnable(true);
 	if (beats->at(beats_index) + 0.16 < time)
 		if(beats_index+1<beats->size())
 			beats_index++;
+
 	for (int i = 0; i < actors.size(); i++)
 	{
 		if (actors[i]->isDead())
@@ -233,6 +259,16 @@ void Testlevel::Update(double delta)
 	{
 		grid_x = (-main_character->getXPosition()) + TILE_WIDTH * 7;
 		grid_y = (-main_character->getYPosition()) + TILE_WIDTH * 5;
+	}
+
+	life_bar_position[0] = D2D1::RectF(-grid_x + TILE_WIDTH, -(int)grid_y + TILE_WIDTH * 8,
+		-grid_x + TILE_WIDTH + bmp_full_life_bar->GetSize().width,
+		-(int)grid_y + TILE_WIDTH * 8 + bmp_full_life_bar->GetSize().height);
+	for(int i=1;i<full_life_num;i++)
+	{
+		life_bar_position[i] = D2D1::RectF(life_bar_position[i-1].right, life_bar_position[i-1].top,
+			life_bar_position[i-1].right + bmp_full_life_bar->GetSize().width, 
+			life_bar_position[i-1].top + bmp_full_life_bar->GetSize().height);
 	}
 
 	if (actors.size() == 1 && actors[0] == main_character)

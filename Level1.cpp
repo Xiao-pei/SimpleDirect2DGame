@@ -140,11 +140,12 @@ void Level1::Update(double delta)
 		else { actors[i]->setMovingEnable(false); }
 		actors[i]->Update(delta);
 	}
-	if (abs(beats->at(beats_index) - time) < 0.16)
+	if (abs(beats->at(beats_index) - time) < 0.17)
 		main_character->setMovingEnable(true);//special benefit for character
-	if (beats->at(beats_index) + 0.16 < time)
+	if (beats->at(beats_index) + 0.18 < time)
 		if (beats_index + 1<beats->size())
 			beats_index++;
+
 	for (int i = 0; i < actors.size(); i++)
 	{
 		if (actors[i]->isDead())
@@ -165,7 +166,6 @@ void Level1::Update(double delta)
 					if (collision->AreTheyCollided(actors[i], actors[j]))
 					{
 						collision->HandleCollision(actors[i], actors[j]);
-						//break;
 					}
 			}
 		}

@@ -7,7 +7,7 @@
 Character::Character(ID2D1HwndRenderTarget* rt)
 {
 	jump_time = 0.0f;
-	life = 4;
+	life = 3;
 	time = jump_time;
 	bitmap_loader = new BitmapLoader(rt);
 	bmp = bitmap_loader->getBitmap(L"char1.png");

@@ -13,7 +13,6 @@ private:
 	ID2D1Bitmap* heart_full;
 	ID2D1Bitmap* heart_empty;
 
-
 	float last_x_position;
 	float last_y_position;
 	float height;

@@ -19,7 +19,7 @@ private:
 
 public:
 	Block();
-	~Block()=default;
+	~Block() = default;
 	void initBlock(ID2D1Bitmap* bitmap);
 	void initDestroyableBlock(ID2D1Bitmap* bitmap);
 	void Update(double delta);

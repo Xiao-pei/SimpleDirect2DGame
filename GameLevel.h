@@ -15,12 +15,12 @@ class GameLevel
 {
 protected:
 	bool load_next_level;
-	ID2D1HwndRenderTarget * m_pRenderTarget = NULL;
+	ID2D1HwndRenderTarget* m_pRenderTarget = NULL;
 	BitmapLoader* bitmap_loader_ = NULL;
 	Audio* music = NULL;
 	Character* main_character = NULL;
 public:
-	
+
 	static bool com(Actor* a, Actor* b)
 	{
 		if (abs(a->getYPosition() - b->getYPosition()) < 1)
@@ -28,15 +28,16 @@ public:
 		else
 			return a->getYPosition() < b->getYPosition();
 	}
+
 	virtual void Load() = 0; //load resources
 	virtual void Update(double delta) = 0; //update
 	virtual void OnRender() = 0; //render
 	virtual GameLevel* LoadNextLevel() = 0; //load next level
 	bool isLoadNextLevel() { return load_next_level; }
+
 	virtual ~GameLevel()
 	{
 		delete music;
 		delete main_character;
 	}
 };
-

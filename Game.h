@@ -13,13 +13,12 @@ private:
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
 	void DiscardDeviceResources();
-	
 
 public:
 	HWND m_hwnd = NULL;
 	ID2D1Factory* m_pDirect2dFactory;
 	ID2D1HwndRenderTarget* m_pRenderTarget = NULL;
-	Timer *timer=NULL;
+	Timer* timer = NULL;
 
 	Game();
 	~Game();

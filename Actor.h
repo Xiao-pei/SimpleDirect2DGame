@@ -22,10 +22,10 @@ public:
 	Actor() = default;
 	virtual ~Actor()
 	{
-		SafeRelease(&bmp);
-		SafeRelease(&fliped_bmp);
 		if (bitmap_loader)
 			delete bitmap_loader;
+		SafeRelease(&bmp);
+		SafeRelease(&fliped_bmp);
 	}
 	virtual void Update(double delta) = 0; //update
 	virtual void OnRender(ID2D1HwndRenderTarget* pRenderTarget) = 0;

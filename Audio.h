@@ -25,7 +25,7 @@ class Audio
 private:
 	IXAudio2* pXAudio2 = NULL;
 	IXAudio2MasteringVoice* pMasterVoice = NULL;
-	IXAudio2SourceVoice* pSourceVoice=NULL;
+	IXAudio2SourceVoice* pSourceVoice = NULL;
 	WAVEFORMATEXTENSIBLE wfx = {0};
 	XAUDIO2_BUFFER buffer = {0};
 
