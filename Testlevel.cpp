@@ -49,7 +49,7 @@ void Testlevel::Load()
 		beats = file_reader->getBeats(L"Tutorial.txt");
 	if (blocks_position == NULL)
 	{
-		blocks_position = file_reader->getMap("a.txt");
+		blocks_position = file_reader->getMap(L"a.txt");
 	}
 	if (blocks.size() == 0)
 	{
@@ -116,7 +116,6 @@ void Testlevel::OnRender()
 {
 	D2D1_SIZE_F floor_size = bmp_floor->GetSize();
 	m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
-
 	D2D1_RECT_F rcBrushRect = D2D1::RectF(-floor_size.width * 6, -floor_size.height * 5, floor_size.width * 50, floor_size.height * 50);
 	m_pBitmapBrushForFloor->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrushForFloor->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
@@ -124,7 +123,7 @@ void Testlevel::OnRender()
 		&rcBrushRect,
 		m_pBitmapBrushForFloor
 	);	//draw the floor
-
+	//draw the map boundary
 	D2D1_RECT_F rcBrushRectWallTransverseTop = D2D1::RectF(-bmp_transverse_wall->GetSize().width, -bmp_transverse_wall->GetSize().height,
 		bmp_transverse_wall->GetSize().width*50, 0);
 	D2D1_RECT_F rcBrushRectWallTransverseButton = D2D1::RectF(-TILE_WIDTH, 50* TILE_WIDTH,
@@ -269,7 +268,7 @@ void Testlevel::Update(double delta)
 		life_bar_position[i] = D2D1::RectF(life_bar_position[i-1].right, life_bar_position[i-1].top,
 			life_bar_position[i-1].right + bmp_full_life_bar->GetSize().width, 
 			life_bar_position[i-1].top + bmp_full_life_bar->GetSize().height);
-	}
+	}// update health bar rect
 
 	if (actors.size() == 1 && actors[0] == main_character)
 		load_next_level = true; //if level was clean, load next level

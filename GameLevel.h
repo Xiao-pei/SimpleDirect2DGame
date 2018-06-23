@@ -33,7 +33,7 @@ public:
 	virtual void Update(double delta) = 0; //update
 	virtual void OnRender() = 0; //render
 	virtual GameLevel* LoadNextLevel() = 0; //load next level
-	bool isLoadNextLevel() { return load_next_level; }
+	bool isLoadingNextLevel() { return load_next_level; }
 
 	virtual ~GameLevel()
 	{

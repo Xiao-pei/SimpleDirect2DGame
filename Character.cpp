@@ -7,8 +7,8 @@
 Character::Character(ID2D1HwndRenderTarget* rt)
 {
 	jump_time = 0.0f;
-	life = 3;
-	time = jump_time;
+	health = 3;
+	time = 0.0f;
 	bitmap_loader = new BitmapLoader(rt);
 	bmp = bitmap_loader->getBitmap(L"char1.png");
 	fliped_bmp = bitmap_loader->getFlipedBitmap(L"char1.png");
@@ -223,8 +223,8 @@ void Character::setPosition(int x, int y)
 
 void Character::beingAttacked()
 {
-	life--;
-	if (!life)
+	health--;
+	if (!health)
 	{
 		dead = true;
 		player->PlayMusic(L"sfxsound/death.wav");

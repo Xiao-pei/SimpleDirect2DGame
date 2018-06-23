@@ -10,7 +10,7 @@ protected:
 	enum state { STILL, UP, DOWN, RIGHT, LEFT };
 	float x_position;
 	float y_position;
-	int life;
+	int health;
 	int moving_state;
 	bool dead;
 	bool moving;
@@ -18,6 +18,7 @@ protected:
 	ID2D1Bitmap* bmp;
 	ID2D1Bitmap* fliped_bmp;
 	BitmapLoader* bitmap_loader;
+	float time;
 public:
 	Actor() = default;
 	virtual ~Actor()
@@ -35,7 +36,7 @@ public:
 	bool isDead() { return dead; }
 	float getXPosition() { return x_position; }
 	float getYPosition() { return y_position; }
-	int getLife() { return life; }
+	int getLife() { return health; }
 	virtual void setMovingEnable(bool e) { moving_enable = e; }
 	//	virtual void setMovingEnable(bool b);
 	virtual float getDestinationX() = 0;

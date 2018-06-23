@@ -17,14 +17,16 @@ std::vector<float>* FileReader::getBeats(const wchar_t* path)
 	return vector;
 }
 
-std::vector<int>* FileReader::getMap(char const* path)
+std::vector<int>* FileReader::getMap(const wchar_t* path)
 {
 	std::vector<int> *vector = new std::vector<int>;
-	FILE *f = fopen(path, "r");
+	fstream in(path);
 	std::string str;
-	str.resize(3);
-	while (fscanf(f, "%s", &str[0]) != EOF) {
+	str.resize(2);
+	while (in.peek() != EOF) {
+		in >> str;
 		vector->push_back(atoi(str.c_str()));
 	}
+	in.close();
 	return vector;
 }

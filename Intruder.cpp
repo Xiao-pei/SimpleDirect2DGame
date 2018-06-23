@@ -7,13 +7,17 @@ Intruder::Intruder(ID2D1HwndRenderTarget* rt)
 {
 	jump_time = 0.0f;
 	collide_count = 0;
-	life = 3;
+	health = 3;
 	time = 0.0f;
+	health_dispaly_timer = 0.0;
 	bitmap_loader = new BitmapLoader(rt);
 	bmp = bitmap_loader->getBitmap(L"char3.png");
 	fliped_bmp = bitmap_loader->getFlipedBitmap(L"char3.png");
+	heart_full = bitmap_loader->getBitmap(L"heart-full.png");
+	heart_empty = bitmap_loader->getBitmap(L"heart-empty.png");
 	width = bmp->GetSize().width / 4;
 	height = bmp->GetSize().height;
+	sound_player = new Audio();
 	for (int i = 0; i < 4; i++) // create my frame rect
 	{
 		frame[i] = D2D1::RectF(
@@ -23,13 +27,27 @@ Intruder::Intruder(ID2D1HwndRenderTarget* rt)
 			height
 		);
 	}
+	heart_width = heart_full->GetSize().width / 5;
+	heart_height = heart_full->GetSize().height;
+	for (int i = 0; i < 5; i++) // create frame rect for heart
+	{
+		heart_frame[i] = D2D1::RectF(
+			i * heart_width,
+			0,
+			(i + 1) * heart_width,
+			heart_height
+		);
+	}
+	heart_position = new D2D_RECT_F[health];
 
+	heart_frame_index = 0;
 	frame_index = 0;
 	moving = false;
 	begin_moving = false;
 	moving_state = STILL;
 	moving_enable = false;
 	continue_moving = false;
+	display_health = false;
 	facing_left = true;
 	dead = false;
 }
@@ -46,6 +64,14 @@ void Intruder::Update(double delta)
 	jump_time += delta / 1000;
 	time += delta / 1000;
 	frame_index = (int)(time * 8) % 4;
+	heart_frame_index = (int)(time * 10) % 5;
+	if (display_health)
+		health_dispaly_timer += delta / 1000;
+	if (health_dispaly_timer > 6)
+	{
+		display_health = false;
+		health_dispaly_timer = 0.0f;
+	}
 	if (target->isDead() == false && !moving) //decide the moing direction of the Intruder
 	{
 		moving_state = STILL;
@@ -85,7 +111,7 @@ void Intruder::Update(double delta)
 		}
 	}
 
-	if (time - last_jump_time > jump_time_length * 4 && !moving &&moving_enable)
+	if (time - last_jump_time > jump_time_length * 4 && !moving && moving_enable)
 	{
 		jump_time = 0;
 		last_jump_time = time;
@@ -133,6 +159,24 @@ void Intruder::Update(double delta)
 			collide_count = 0;
 		}
 	}
+	heart_position[0] = D2D1::RectF(
+		x_position - width,
+		y_position - height - heart_height,
+		x_position - width + heart_width,
+		y_position - height
+	);
+	heart_position[1] = D2D1::RectF(
+		x_position - width / 2 - heart_width / 2,
+		y_position - height - heart_height,
+		x_position - width / 2 + heart_width / 2,
+		y_position - height
+	);
+	heart_position[2] = D2D1::RectF(
+		x_position - heart_width,
+		y_position - height - heart_height,
+		x_position,
+		y_position - height
+	);
 	character_position_rect = D2D1::RectF(x_position - width,
 	                                      y_position - height, x_position, y_position);
 }
@@ -149,6 +193,18 @@ void Intruder::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 			pRenderTarget->DrawBitmap(bmp, character_position_rect,
 			                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, frame[frame_index]
 			);
+		if (display_health)
+			for (int i = 0; i < 3; i++)
+			{
+				if (i < health)
+					pRenderTarget->DrawBitmap(heart_full, heart_position[i],
+						1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, heart_frame[heart_frame_index]
+					);
+				else
+					pRenderTarget->DrawBitmap(heart_empty, heart_position[i],
+						1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, heart_frame[heart_frame_index]
+					);
+			}
 	}
 }
 
@@ -193,10 +249,12 @@ float Intruder::getDestinationY()
 
 void Intruder::beingAttacked()
 {
-	--life;
-	if (!life)
+	--health;
+	display_health = true;
+	if (!health)
 	{
 		dead = true;
+		sound_player->PlayMusic(L"sfxsound/death.wav");
 	}
 }
 

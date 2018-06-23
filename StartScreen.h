@@ -5,6 +5,8 @@ class StartScreen :
 {
 private:
 	ID2D1Bitmap * bitmap = NULL;
+	ID2D1Bitmap* bitmap_start = NULL;
+	bool dispaly_start = false;
 	double time=0;
 public:
 	StartScreen(ID2D1HwndRenderTarget* rt)

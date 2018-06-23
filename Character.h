@@ -10,7 +10,6 @@ private:
 	float height;
 	float width;
 	float jump_time;
-	float time;
 
 	//folowing bools described the state of character
 	bool acting;

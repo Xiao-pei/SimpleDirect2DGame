@@ -23,7 +23,6 @@ void Game::LoadLevel() //load level and reset timer
 
 void Game::OnRender()
 {
-	currentLevel->Load();
 	currentLevel->OnRender();
 	timer->Update();
 }
@@ -31,11 +30,13 @@ void Game::OnRender()
 void Game::Update(double delta)
 {
 	currentLevel->Update(delta);
-	if(currentLevel->isLoadNextLevel())
+	if(currentLevel->isLoadingNextLevel())
 	{
 		GameLevel* pre = currentLevel;
 		currentLevel = currentLevel->LoadNextLevel();
 		delete pre;
+		currentLevel->Load();
+		currentLevel->Update(delta);
 	}
 		
 }
