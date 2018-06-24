@@ -12,6 +12,7 @@ private:
 	ID2D1Bitmap* bmp_transverse_wall = NULL;
 	ID2D1Bitmap* bmp_full_life_bar = NULL;
 	ID2D1Bitmap* bmp_empty_life_bar = NULL;
+	ID2D1Bitmap* bmp_overlay = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrushForFloor = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrushForVerticalWall = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrushForTransverseWall = NULL;
