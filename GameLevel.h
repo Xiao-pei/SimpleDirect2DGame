@@ -37,7 +37,9 @@ public:
 
 	virtual ~GameLevel()
 	{
-		delete music;
-		delete main_character;
+		if(music)
+			delete music;
+		if(main_character)
+			delete main_character;
 	}
 };

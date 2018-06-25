@@ -8,6 +8,8 @@
 StartScreen::~StartScreen()
 {
 	SafeRelease(&bitmap);
+	SafeRelease(&bitmap_start);
+	SafeRelease(&bitmap_overlay);
 }
 
 void StartScreen::OnRender()

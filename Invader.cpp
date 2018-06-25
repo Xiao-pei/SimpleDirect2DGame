@@ -58,7 +58,8 @@ Invader::~Invader()
 	SafeRelease(&fliped_bmp);
 	SafeRelease(&heart_full);
 	SafeRelease(&heart_empty);
-	delete sound_player;
+	if(sound_player)
+		delete sound_player;
 }
 
 void Invader::Update(double delta)

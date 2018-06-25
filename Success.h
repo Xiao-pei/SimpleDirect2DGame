@@ -1,22 +1,21 @@
 #pragma once
 #include "GameLevel.h"
-class StartScreen :
+#include"StartScreen.h"
+class Success :
 	public GameLevel
 {
 private:
-	ID2D1Bitmap * bitmap = NULL;
-	ID2D1Bitmap* bitmap_start = NULL;
+	ID2D1Bitmap * bitmap_success = NULL;
 	ID2D1Bitmap* bitmap_overlay = NULL;
-	bool dispaly_start = false; //controll the display of the prompt
-	double time=0;
+	double time = 0;
 public:
-	StartScreen(ID2D1HwndRenderTarget* rt)
+	Success(ID2D1HwndRenderTarget* rt)
 	{
 		load_next_level = false;
 		m_pRenderTarget = rt;
 		bitmap_loader_ = new BitmapLoader(m_pRenderTarget);
 	}
-	~StartScreen();
+	~Success();
 	void OnRender() override;
 	void Update(double delta) override;
 	void Load() override;

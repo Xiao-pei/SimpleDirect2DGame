@@ -57,6 +57,8 @@ Intruder::~Intruder()
 {
 	SafeRelease(&bmp);
 	SafeRelease(&fliped_bmp);
+	if (sound_player)
+		delete sound_player;
 }
 
 void Intruder::Update(double delta)

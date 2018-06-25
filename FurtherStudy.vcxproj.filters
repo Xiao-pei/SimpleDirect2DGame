@@ -78,6 +78,12 @@
     <ClInclude Include="FileReader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Success.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Failed.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -127,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="FileReader.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Success.cpp">
+      <Filter>源文件\GameLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Failed.cpp">
+      <Filter>源文件\GameLevel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

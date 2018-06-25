@@ -29,9 +29,11 @@ private:
 	float x = 0.0f;
 	float y = 0.0f;
 	float time = 0;
+	float wait_time=0;
 	//folowing variables described "camera" position
 	float grid_x = 0;
 	float grid_y = 0;
+	//health bar information
 	int full_life_num = 0;
 	int current_life_num = 0;
 	std::vector<int>* blocks_position = NULL;

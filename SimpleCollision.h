@@ -6,7 +6,7 @@ class SimpleCollision
 {
 public:
 	SimpleCollision();
-	~SimpleCollision()=default;
+	~SimpleCollision() = default;
 	bool AreTheyCollided(Actor* character, Block* block);
 	bool AreTheyCollided(Actor* attacker, Actor* attackee);
 	bool HandleCollision(Actor* character, Block* block);//return true if a block is destroied

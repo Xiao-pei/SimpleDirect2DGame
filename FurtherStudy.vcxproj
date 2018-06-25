@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Failed.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="BitmapLoader.h" />
     <ClInclude Include="Block.h" />
@@ -168,11 +169,13 @@
     <ClInclude Include="SimpleCollision.h" />
     <ClInclude Include="StartScreen.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Success.h" />
     <ClInclude Include="TestLevel.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Failed.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="BitmapLoader.cpp" />
     <ClCompile Include="Block.cpp" />
@@ -191,6 +194,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Success.cpp" />
     <ClCompile Include="Testlevel.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>

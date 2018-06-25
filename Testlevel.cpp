@@ -2,6 +2,7 @@
 #include "TestLevel.h"
 #include "Saferelease.h"
 #include "Level1.h"
+#include "Failed.h"
 
 
 Testlevel::~Testlevel()
@@ -235,14 +236,12 @@ void Testlevel::Update(double delta)
 	}
 	for (int i = 0; i < actors.size(); i++)
 	{
-		if (abs(beats->at(beats_index) - time) < 0.13)
+		if (abs(beats->at(beats_index) - time) < 0.14)
 			actors[i]->setMovingEnable(true);
 		else { actors[i]->setMovingEnable(false); }
 		actors[i]->Update(delta);
 	}
 	current_life_num = main_character->getLife(); //update health bar info
-	if (abs(beats->at(beats_index) - time) < 0.149)//special benefit for character
-		main_character->setMovingEnable(true);
 	if (beats->at(beats_index) + 0.16 < time)
 		if (beats_index + 1 < beats->size())
 			beats_index++;
@@ -285,16 +284,24 @@ void Testlevel::Update(double delta)
 		                                   life_bar_position[i - 1].right + bmp_full_life_bar->GetSize().width,
 		                                   life_bar_position[i - 1].top + bmp_full_life_bar->GetSize().height);
 	}// update health bar rect
-
+	if(main_character->isDead())
+	{
+		wait_time += delta/1000;
+		if(wait_time>2.5)
+			load_next_level = true;
+	}
 	if (actors.size() == 1 && actors[0] == main_character)
-		load_next_level = true; //if level was clean, load next level
+		load_next_level = true; //if level was clean or player was dead, load next level
 }
 
 GameLevel* Testlevel::LoadNextLevel()
 {
 	if (load_next_level)
 	{
-		return new Level1(m_pRenderTarget);
+		if (main_character->isDead())
+			return new Failed(m_pRenderTarget);
+		else
+			return new Level1(m_pRenderTarget);
 	}
 	else
 		return this;

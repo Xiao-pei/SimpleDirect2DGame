@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Level1.h"
+#include "Success.h"
+#include "Failed.h"
 
 Level1::~Level1()
 {
@@ -13,12 +15,24 @@ Level1::~Level1()
 	SafeRelease(&m_pBitmapBrushForFloor);
 	SafeRelease(&m_pBitmapBrushForVerticalWall);
 	SafeRelease(&m_pBitmapBrushForTransverseWall);
+	if (beats)
+		delete beats;
+	beats = NULL;
+	if (blocks_position)
+		delete blocks_position;
+	blocks_position = NULL;
 	if (enemy)
 		delete enemy;
+	enemy = NULL;
 	if (intruder)
 		delete intruder;
+	intruder = NULL;
+	if (intruder1)
+		delete intruder1;
+	intruder1 = NULL;
 	if (file_reader)
 		delete file_reader;
+	file_reader = NULL;
 }
 
 void Level1::Load()
@@ -242,8 +256,8 @@ void Level1::Update(double delta)
 		actors[i]->Update(delta);
 	}
 	current_life_num = main_character->getLife();
-	if (abs(beats->at(beats_index) - time) < 0.17)
-		main_character->setMovingEnable(true);//special benefit for character
+	//if (abs(beats->at(beats_index) - time) < 0.17)
+	//	main_character->setMovingEnable(true);//special benefit for character
 	if (beats->at(beats_index) + 0.18 < time)
 		if (beats_index + 1 < beats->size())
 			beats_index++;
@@ -288,7 +302,7 @@ void Level1::Update(double delta)
 		                                   life_bar_position[i - 1].top + bmp_full_life_bar->GetSize().height);
 	}
 
-	if (actors.size() == 1 && actors[0] == main_character)
+	if ((actors.size() == 1 && actors[0] == main_character) || main_character->isDead())
 		load_next_level = true; //if level was clean, load next level
 }
 
@@ -296,7 +310,15 @@ GameLevel* Level1::LoadNextLevel()
 {
 	if (load_next_level)
 	{
-		return nullptr;
+		if (load_next_level)
+		{
+			if (main_character->isDead())
+				return new Failed(m_pRenderTarget);
+			else
+				return new Success(m_pRenderTarget);
+		}
+		else
+			return this;
 	}
 	else
 		return this;
