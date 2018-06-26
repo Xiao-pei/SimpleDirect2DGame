@@ -147,7 +147,11 @@ void Character::Update(double delta)
 		last_x_position = x_position;
 		moving = true;
 	}
-	else { KbManager::discardMessage(); }
+	else
+	{
+		KbManager::discardMessage();
+		acting = false;
+	}
 
 	if (moving)
 	{
@@ -181,7 +185,6 @@ void Character::Update(double delta)
 				y_position = last_y_position;
 			moving_state = STILL;
 			moving = false;
-			moving_enable = false;
 			acting = false;
 		}
 	}

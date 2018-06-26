@@ -11,9 +11,9 @@ public:
 	~Timer();
 	void Reset(); //reset timer
 	double getCurrentTime();
-	double getLastTimeCalled(); //last time when we called update()
+	double getLastTimeCalled(); //return the last time when we called Update()
 	double getStartTime();
-	void Update();
+	void Update(); //update timer
 	double getDeltaTime();
 };
 

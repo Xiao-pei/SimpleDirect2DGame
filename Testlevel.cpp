@@ -28,12 +28,12 @@ Testlevel::~Testlevel()
 	if (file_reader)
 		delete file_reader;
 	file_reader = NULL;
-	if (enemy)
-		delete enemy;
-	enemy = NULL;
-	if (intruder)
-		delete intruder;
-	intruder = NULL;
+	if (enemy0)
+		delete enemy0;
+	enemy0 = NULL;
+	if (intruder0)
+		delete intruder0;
+	intruder0 = NULL;
 }
 
 void Testlevel::Load()
@@ -59,14 +59,14 @@ void Testlevel::Load()
 		beats = file_reader->getBeats(L"Tutorial.txt");
 	if (blocks_position == NULL)
 	{
-		blocks_position = file_reader->getMap(L"level0.txt");
+		blocks_position = file_reader->getMap(L"level_1.txt");
 	}
 	if (blocks.size() == 0)
 	{
 		for (int i = 0; i < blocks_position->size(); i += 3)
 		{
 			Block* block = new Block();
-			if (blocks_position->at(i) == 0)
+			if (blocks_position->at(i) == 1)
 				block->initBlock(bitmap_loader_->
 					getBitmap(L"wall-2.png"));
 			else
@@ -87,23 +87,38 @@ void Testlevel::Load()
 	if (main_character == NULL)
 	{
 		main_character = new Character(m_pRenderTarget);
-		main_character->setPosition(5, 7);
+		main_character->setPosition(10, 8);
 		full_life_num = main_character->getLife();
 		life_bar_position = new D2D_RECT_F[full_life_num];
+		grid_x = (-main_character->getXPosition()) + 6.5 * TILE_WIDTH;
+		grid_y = (-main_character->getYPosition()) + 6 * TILE_WIDTH;
 		actors.push_back(main_character);
 	}
-	if (enemy == NULL)
+	if (enemy0 == NULL)
 	{
-		enemy = new Invader(m_pRenderTarget);
-		enemy->setPosition(6, 6);
-		actors.push_back(enemy);
+		enemy0 = new Invader(m_pRenderTarget);
+		enemy0->setPosition(6, 6);
+		actors.push_back(enemy0);
 	}
-	if (intruder == NULL)
+	if (enemy1 == NULL)
 	{
-		intruder = new Intruder(m_pRenderTarget);
-		intruder->setPosition(8, 8);
-		intruder->setTarget(main_character);
-		actors.push_back(intruder);
+		enemy1 = new Invader(m_pRenderTarget);
+		enemy1->setPosition(14, 8);
+		actors.push_back(enemy1);
+	}
+	if (intruder0 == NULL)
+	{
+		intruder0 = new Intruder(m_pRenderTarget);
+		intruder0->setPosition(2, 2);
+		intruder0->setTarget(main_character);
+		actors.push_back(intruder0);
+	}
+	if (intruder1 == NULL)
+	{
+		intruder1 = new Intruder(m_pRenderTarget);
+		intruder1->setPosition(18, 13);
+		intruder1->setTarget(main_character);
+		actors.push_back(intruder1);
 	}
 
 	if (m_pBitmapBrushForFloor == NULL)
@@ -274,8 +289,8 @@ void Testlevel::Update(double delta)
 	}
 	if (main_character->isMoving())
 	{
-		grid_x = (-main_character->getXPosition()) + main_character->getInitx();
-		grid_y = (-main_character->getYPosition()) + main_character->getInity();
+		grid_x = (-main_character->getXPosition()) + 6.5 * TILE_WIDTH;
+		grid_y = (-main_character->getYPosition()) + 6 * TILE_WIDTH;
 	}
 
 	life_bar_position[0] = D2D1::RectF(-grid_x + TILE_WIDTH, -(int)grid_y + TILE_WIDTH * 8,

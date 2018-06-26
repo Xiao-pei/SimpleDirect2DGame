@@ -23,6 +23,7 @@ private:
 	Invader* invader = NULL;
 	Intruder* intruder = NULL;
 	Intruder* intruder1 = NULL;
+	Intruder* intruder2 = NULL;
 	FileReader* file_reader = NULL;
 	std::vector<float>* beats = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering

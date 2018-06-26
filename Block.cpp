@@ -92,11 +92,10 @@ void Block::setIsAbove(bool above)
 
 bool Block::blockDestoried()
 {
-	if (destoryable&&!destoried)
+	if (destoryable && !destoried)
 	{
 		destoried = true;
 		return true;
 	}
 	else { return false; }
-		
 }

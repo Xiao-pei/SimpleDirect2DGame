@@ -3,6 +3,7 @@
 #include "TestLevel.h"
 #include"KbManager.h"
 #include "Level1.h"
+#include "TutorialLevel.h"
 
 
 StartScreen::~StartScreen()
@@ -63,7 +64,7 @@ GameLevel* StartScreen::LoadNextLevel()
 {
 	if (load_next_level)
 	{
-		return new Testlevel(m_pRenderTarget);
+		return new TutorialLevel(m_pRenderTarget);
 	}
 	else
 		return this;

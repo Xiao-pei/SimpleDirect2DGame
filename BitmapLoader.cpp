@@ -32,14 +32,14 @@ HRESULT BitmapLoader::createBitmap(const wchar_t* path, const bool flip)
 	if (SUCCEEDED(hr))
 		hr = pwicFactory->CreateFormatConverter(&pConverter);
 
-	if (SUCCEEDED(hr)&&flip)
+	if (SUCCEEDED(hr) && flip)
 	{
 		hr = pwicFactory->CreateBitmapFlipRotator(&pFlipRotator);
 		if (SUCCEEDED(hr))
 		{
 			hr = pFlipRotator->Initialize(
-				pSource,                     // Bitmap source to flip.
-				WICBitmapTransformFlipHorizontal);								
+				pSource, // Bitmap source to flip.
+				WICBitmapTransformFlipHorizontal);
 		}
 		pConverter->Initialize(
 			pFlipRotator,
@@ -75,4 +75,3 @@ HRESULT BitmapLoader::createBitmap(const wchar_t* path, const bool flip)
 
 	return hr;
 }
-

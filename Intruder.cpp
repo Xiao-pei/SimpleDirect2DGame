@@ -113,7 +113,7 @@ void Intruder::Update(double delta)
 		}
 	}
 
-	if (time - last_jump_time > jump_time_length * 4 && !moving && moving_enable)
+	if (time - last_jump_time > jump_time_length * 6 && !moving && moving_enable)
 	{
 		jump_time = 0;
 		last_jump_time = time;
@@ -272,8 +272,8 @@ void Intruder::collidedWithActor()
 
 void Intruder::setPosition(int x, int y)
 {
-	x_position = TILE_WIDTH * x-1;
-	y_position = TILE_WIDTH * y-2;
+	x_position = TILE_WIDTH * x - 1;
+	y_position = TILE_WIDTH * y - 2;
 	last_x_position = x_position;
 	last_y_position = y_position;
 }

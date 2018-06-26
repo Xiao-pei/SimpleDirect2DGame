@@ -18,8 +18,10 @@ private:
 
 	SimpleCollision* collision = NULL;
 	std::vector<Block*> blocks;
-	Invader* enemy = NULL;
-	Intruder* intruder = NULL;
+	Invader* enemy0 = NULL;
+	Invader* enemy1 = NULL;
+	Intruder* intruder0 = NULL;
+	Intruder* intruder1 = NULL;
 	FileReader* file_reader = NULL;
 	std::vector<float>* beats = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering

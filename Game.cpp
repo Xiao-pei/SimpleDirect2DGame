@@ -30,7 +30,7 @@ void Game::OnRender()
 void Game::Update(double delta)
 {
 	currentLevel->Update(delta);
-	if(currentLevel->isLoadingNextLevel())
+	if (currentLevel->isLoadingNextLevel())
 	{
 		GameLevel* pre = currentLevel;
 		currentLevel = currentLevel->LoadNextLevel();
@@ -38,7 +38,6 @@ void Game::Update(double delta)
 		currentLevel->Load();
 		currentLevel->Update(delta);
 	}
-		
 }
 
 HRESULT Game::CreateDeviceResources()

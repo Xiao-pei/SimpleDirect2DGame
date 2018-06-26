@@ -6,7 +6,7 @@ using namespace std;
 
 std::vector<float>* FileReader::getBeats(const wchar_t* path)
 {
-	std::vector<float> *vector = new std::vector<float>;
+	std::vector<float>* vector = new std::vector<float>;
 	fstream in(path);
 	string line;
 	while (getline(in, line))
@@ -19,11 +19,12 @@ std::vector<float>* FileReader::getBeats(const wchar_t* path)
 
 std::vector<int>* FileReader::getMap(const wchar_t* path)
 {
-	std::vector<int> *vector = new std::vector<int>;
+	std::vector<int>* vector = new std::vector<int>;
 	fstream in(path);
 	std::string str;
 	str.resize(2);
-	while (in.peek() != EOF) {
+	while (in.peek() != EOF)
+	{
 		in >> str;
 		vector->push_back(atoi(str.c_str()));
 	}

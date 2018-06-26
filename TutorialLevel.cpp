@@ -16,6 +16,9 @@ TutorialLevel::~TutorialLevel()
 	SafeRelease(&m_pBitmapBrushForFloor);
 	SafeRelease(&m_pBitmapBrushForVerticalWall);
 	SafeRelease(&m_pBitmapBrushForTransverseWall);
+	SafeRelease(&bmp_tip0);
+	SafeRelease(&bmp_tip1);
+	SafeRelease(&bmp_tip2);
 	if (beats)
 		delete beats;
 	beats = NULL;
@@ -28,9 +31,6 @@ TutorialLevel::~TutorialLevel()
 	if (enemy)
 		delete enemy;
 	enemy = NULL;
-	if (intruder)
-		delete intruder;
-	intruder = NULL;
 }
 
 void TutorialLevel::Load()
@@ -50,20 +50,27 @@ void TutorialLevel::Load()
 		bmp_empty_life_bar = bitmap_loader_->getBitmap(L"life-empty.png");
 	if (bmp_overlay == NULL)
 		bmp_overlay = bitmap_loader_->getBitmap(L"cover.png");
+	if (bmp_tip0 == NULL)
+		bmp_tip0 = bitmap_loader_->getBitmap(L"tip1.png");
+	if (bmp_tip1 == NULL)
+		bmp_tip1 = bitmap_loader_->getBitmap(L"tip2.png");
+	if (bmp_tip2 == NULL)
+		bmp_tip2 = bitmap_loader_->getBitmap(L"tip3.png");
+
 	if (file_reader == NULL)
 		file_reader = new FileReader();
 	if (beats == NULL)
 		beats = file_reader->getBeats(L"Tutorial.txt");
 	if (blocks_position == NULL)
 	{
-		blocks_position = file_reader->getMap(L"level0.txt");
+		blocks_position = file_reader->getMap(L"level_0.txt");
 	}
 	if (blocks.size() == 0)
 	{
 		for (int i = 0; i < blocks_position->size(); i += 3)
 		{
 			Block* block = new Block();
-			if (blocks_position->at(i) == 0)
+			if (blocks_position->at(i) == 1)
 				block->initBlock(bitmap_loader_->
 					getBitmap(L"wall-2.png"));
 			else
@@ -84,23 +91,18 @@ void TutorialLevel::Load()
 	if (main_character == NULL)
 	{
 		main_character = new Character(m_pRenderTarget);
-		main_character->setPosition(5, 7);
+		main_character->setPosition(5, 6);
 		full_life_num = main_character->getLife();
 		life_bar_position = new D2D_RECT_F[full_life_num];
+		grid_x = (-main_character->getXPosition()) + 6.5 * TILE_WIDTH;
+		grid_y = (-main_character->getYPosition()) + 6 * TILE_WIDTH;
 		actors.push_back(main_character);
 	}
 	if (enemy == NULL)
 	{
 		enemy = new Invader(m_pRenderTarget);
-		enemy->setPosition(6, 6);
+		enemy->setPosition(31, 6);
 		actors.push_back(enemy);
-	}
-	if (intruder == NULL)
-	{
-		intruder = new Intruder(m_pRenderTarget);
-		intruder->setPosition(8, 8);
-		intruder->setTarget(main_character);
-		actors.push_back(intruder);
 	}
 
 	if (m_pBitmapBrushForFloor == NULL)
@@ -125,20 +127,20 @@ void TutorialLevel::OnRender()
 	D2D1_SIZE_F floor_size = bmp_floor->GetSize();
 	m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 	D2D1_RECT_F rcBrushRect = D2D1::RectF(-floor_size.width * 6, -floor_size.height * 5, floor_size.width * 50,
-		floor_size.height * 50);
+	                                      floor_size.height * 50);
 	m_pBitmapBrushForFloor->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrushForFloor->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
 	m_pRenderTarget->FillRectangle(
 		&rcBrushRect,
 		m_pBitmapBrushForFloor
 	); //draw the floor
-	   //draw the map boundary
+	//draw the map boundary
 	D2D1_RECT_F rcBrushRectWallTransverseTop = D2D1::RectF(-bmp_transverse_wall->GetSize().width,
-		-bmp_transverse_wall->GetSize().height,
-		bmp_transverse_wall->GetSize().width * 50, 0);
+	                                                       -bmp_transverse_wall->GetSize().height,
+	                                                       bmp_transverse_wall->GetSize().width * 50, 0);
 	D2D1_RECT_F rcBrushRectWallTransverseButton = D2D1::RectF(-TILE_WIDTH, 50 * TILE_WIDTH,
-		TILE_WIDTH * 51,
-		50 * TILE_WIDTH + bmp_transverse_wall->GetSize().height);
+	                                                          TILE_WIDTH * 51,
+	                                                          50 * TILE_WIDTH + bmp_transverse_wall->GetSize().height);
 	m_pBitmapBrushForTransverseWall->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrushForTransverseWall->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
 	m_pRenderTarget->FillRectangle(
@@ -149,25 +151,25 @@ void TutorialLevel::OnRender()
 
 	D2D1_SIZE_F top_size = bmp_vertical_wall_top->GetSize();
 	m_pRenderTarget->DrawBitmap(bmp_vertical_wall_top,
-		D2D1::RectF(-top_size.width, -top_size.height,
-			0, 0), //target rect
-		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-		D2D1::RectF(0, 0,
-			top_size.width, top_size.height)//source rect
+	                            D2D1::RectF(-top_size.width, -top_size.height,
+	                                        0, 0), //target rect
+	                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+	                            D2D1::RectF(0, 0,
+	                                        top_size.width, top_size.height)//source rect
 	);
 	m_pRenderTarget->DrawBitmap(bmp_vertical_wall_top,
-		D2D1::RectF(50 * top_size.width, -top_size.height,
-			51 * top_size.width, 0), //target rect
-		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-		D2D1::RectF(0, 0,
-			top_size.width, top_size.height)//source rect
+	                            D2D1::RectF(50 * top_size.width, -top_size.height,
+	                                        51 * top_size.width, 0), //target rect
+	                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+	                            D2D1::RectF(0, 0,
+	                                        top_size.width, top_size.height)//source rect
 	);
 
 	D2D1_RECT_F rcBrushRectWallVerticalLeft = D2D1::RectF(-bmp_vertical_wall->GetSize().width, 0,
-		0, bmp_vertical_wall->GetSize().height * 50);
+	                                                      0, bmp_vertical_wall->GetSize().height * 50);
 	D2D1_RECT_F rcBrushRectWallVerticalRight = D2D1::RectF(50 * bmp_vertical_wall->GetSize().width, 0,
-		51 * bmp_vertical_wall->GetSize().width,
-		bmp_vertical_wall->GetSize().height * 50);
+	                                                       51 * bmp_vertical_wall->GetSize().width,
+	                                                       bmp_vertical_wall->GetSize().height * 50);
 	m_pBitmapBrushForVerticalWall->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
 	m_pBitmapBrushForVerticalWall->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
 	m_pRenderTarget->FillRectangle(
@@ -205,23 +207,36 @@ void TutorialLevel::OnRender()
 		(*iterator++)->OnRender(m_pRenderTarget);
 
 	D2D1_RECT_F life_bar_source = D2D1::RectF(0, 0, bmp_full_life_bar->GetSize().width,
-		bmp_full_life_bar->GetSize().height);
+	                                          bmp_full_life_bar->GetSize().height);
 	for (int i = 0; i < full_life_num; i++)
 	{
 		if (i < current_life_num)
 			m_pRenderTarget->DrawBitmap(bmp_full_life_bar, life_bar_position[i],
-				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				life_bar_source);
+			                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+			                            life_bar_source);
 		else
 			m_pRenderTarget->DrawBitmap(bmp_empty_life_bar, life_bar_position[i],
-				1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				life_bar_source);
+			                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+			                            life_bar_source);
 	}
 	m_pRenderTarget->DrawBitmap(bmp_overlay,
-		D2D1::RectF(-grid_x, -grid_y, -grid_x + bmp_overlay->GetSize().width,
-			-grid_y + bmp_overlay->GetSize().height),
-		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-		D2D1::RectF(0, 0, bmp_overlay->GetSize().width, bmp_overlay->GetSize().height));
+	                            D2D1::RectF(-grid_x, -grid_y, -grid_x + bmp_overlay->GetSize().width,
+	                                        -grid_y + bmp_overlay->GetSize().height),
+	                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+	                            D2D1::RectF(0, 0, bmp_overlay->GetSize().width, bmp_overlay->GetSize().height));
+	//draw overlay
+	const D2D1_RECT_F tip_source = D2D1::RectF(0, 0, bmp_tip0->GetSize().width, bmp_tip0->GetSize().height);
+	const D2D1_RECT_F tip0 = D2D1::RectF(4 * TILE_WIDTH, 0, 4 * TILE_WIDTH + bmp_tip0->GetSize().width,
+	                                     bmp_tip0->GetSize().height);
+	const D2D1_RECT_F tip1 = D2D1::RectF(14 * TILE_WIDTH, 0, 14 * TILE_WIDTH + bmp_tip0->GetSize().width,
+	                                     bmp_tip0->GetSize().height);
+	const D2D1_RECT_F tip2 = D2D1::RectF(25 * TILE_WIDTH, 0, 25 * TILE_WIDTH + bmp_tip0->GetSize().width,
+	                                     bmp_tip0->GetSize().height);
+	m_pRenderTarget->DrawBitmap(bmp_tip0, tip0, 1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, tip_source);
+	m_pRenderTarget->DrawBitmap(bmp_tip1, tip1, 1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, tip_source);
+	m_pRenderTarget->DrawBitmap(bmp_tip2, tip2, 1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, tip_source);
+
+	//draw tips
 	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
 }
 
@@ -271,18 +286,18 @@ void TutorialLevel::Update(double delta)
 	}
 	if (main_character->isMoving())
 	{
-		grid_x = (-main_character->getXPosition()) + main_character->getInitx();
-		grid_y = (-main_character->getYPosition()) + main_character->getInity();
+		grid_x = (-main_character->getXPosition()) + 6.5 * TILE_WIDTH;
+		grid_y = (-main_character->getYPosition()) + 6 * TILE_WIDTH;
 	}
 
 	life_bar_position[0] = D2D1::RectF(-grid_x + TILE_WIDTH, -(int)grid_y + TILE_WIDTH * 8,
-		-grid_x + TILE_WIDTH + bmp_full_life_bar->GetSize().width,
-		-(int)grid_y + TILE_WIDTH * 8 + bmp_full_life_bar->GetSize().height);
+	                                   -grid_x + TILE_WIDTH + bmp_full_life_bar->GetSize().width,
+	                                   -(int)grid_y + TILE_WIDTH * 8 + bmp_full_life_bar->GetSize().height);
 	for (int i = 1; i < full_life_num; i++)
 	{
 		life_bar_position[i] = D2D1::RectF(life_bar_position[i - 1].right, life_bar_position[i - 1].top,
-			life_bar_position[i - 1].right + bmp_full_life_bar->GetSize().width,
-			life_bar_position[i - 1].top + bmp_full_life_bar->GetSize().height);
+		                                   life_bar_position[i - 1].right + bmp_full_life_bar->GetSize().width,
+		                                   life_bar_position[i - 1].top + bmp_full_life_bar->GetSize().height);
 	}// update health bar rect
 	if (main_character->isDead())
 	{

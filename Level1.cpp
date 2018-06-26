@@ -15,6 +15,7 @@ Level1::~Level1()
 	SafeRelease(&m_pBitmapBrushForFloor);
 	SafeRelease(&m_pBitmapBrushForVerticalWall);
 	SafeRelease(&m_pBitmapBrushForTransverseWall);
+
 	if (beats)
 		delete beats;
 	beats = NULL;
@@ -58,14 +59,14 @@ void Level1::Load()
 		beats = file_reader->getBeats(L"Tutorial.txt");
 	if (blocks_position == NULL)
 	{
-		blocks_position = file_reader->getMap(L"a.txt");
+		blocks_position = file_reader->getMap(L"level_2.txt");
 	}
 	if (blocks.size() == 0)
 	{
 		for (int i = 0; i < blocks_position->size(); i += 3)
 		{
 			Block* block = new Block();
-			if (blocks_position->at(i) == 0)
+			if (blocks_position->at(i) == 1)
 				block->initBlock(bitmap_loader_->
 					getBitmap(L"wall-2.png"));
 			else
@@ -78,8 +79,11 @@ void Level1::Load()
 	if (main_character == NULL)
 	{
 		main_character = new Character(m_pRenderTarget);
+		main_character->setPosition(3, 3);
 		full_life_num = main_character->getLife();
 		life_bar_position = new D2D_RECT_F[full_life_num];
+		grid_x = (-main_character->getXPosition()) + 6.5 * TILE_WIDTH;
+		grid_y = (-main_character->getYPosition()) + 6 * TILE_WIDTH;
 		actors.push_back(main_character);
 	}
 	if (enemy == NULL)
@@ -91,22 +95,29 @@ void Level1::Load()
 	if (invader == NULL)
 	{
 		invader = new Invader(m_pRenderTarget);
-		invader->setPosition(10, 10);
+		invader->setPosition(10, 8);
 		actors.push_back(invader);
 	}
 	if (intruder == NULL)
 	{
 		intruder = new Intruder(m_pRenderTarget);
-		intruder->setPosition(8, 8);
+		intruder->setPosition(18, 3);
 		intruder->setTarget(main_character);
 		actors.push_back(intruder);
 	}
 	if (intruder1 == NULL)
 	{
 		intruder1 = new Intruder(m_pRenderTarget);
-		intruder1->setPosition(10, 9);
+		intruder1->setPosition(4, 11);
 		intruder1->setTarget(main_character);
 		actors.push_back(intruder1);
+	}
+	if (intruder2 == NULL)
+	{
+		intruder2 = new Intruder(m_pRenderTarget);
+		intruder2->setPosition(18, 12);
+		intruder2->setTarget(main_character);
+		actors.push_back(intruder2);
 	}
 	if (music == NULL)
 	{
@@ -237,6 +248,7 @@ void Level1::OnRender()
 	                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 	                            D2D1::RectF(0, 0, bmp_overlay->GetSize().width, bmp_overlay->GetSize().height));
 	//draw the stylish overlay
+
 	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(grid_x, grid_y));
 }
 
@@ -288,8 +300,8 @@ void Level1::Update(double delta)
 	}
 	if (main_character->isMoving())
 	{
-		grid_x = (-main_character->getXPosition()) + TILE_WIDTH * 7;
-		grid_y = (-main_character->getYPosition()) + TILE_WIDTH * 5;
+		grid_x = (-main_character->getXPosition()) + 6.5 * TILE_WIDTH;
+		grid_y = (-main_character->getYPosition()) + 6 * TILE_WIDTH;
 	}
 
 	life_bar_position[0] = D2D1::RectF(-grid_x + TILE_WIDTH, -(int)grid_y + TILE_WIDTH * 8,
@@ -302,14 +314,12 @@ void Level1::Update(double delta)
 		                                   life_bar_position[i - 1].top + bmp_full_life_bar->GetSize().height);
 	}
 
-	if (main_character->isDead())
+	if (actors.size() == 1 && actors[0] == main_character || main_character->isDead())
 	{
 		wait_time += delta / 1000;
-		if (wait_time > 2.5)
+		if (wait_time > 3)
 			load_next_level = true;
-	}
-	if (actors.size() == 1 && actors[0] == main_character)
-		load_next_level = true; //if level was clean or player was dead, load next level
+	} //if level was clean or player was dead, load next level
 }
 
 GameLevel* Level1::LoadNextLevel()

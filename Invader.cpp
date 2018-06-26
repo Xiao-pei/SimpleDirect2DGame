@@ -175,8 +175,8 @@ void Invader::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 
 void Invader::setPosition(int x, int y)
 {
-	x_position = TILE_WIDTH * x-1;
-	y_position = TILE_WIDTH * y-2;
+	x_position = TILE_WIDTH * x - 1;
+	y_position = TILE_WIDTH * y - 2;
 	last_x_position = x_position;
 	last_y_position = y_position;
 }
@@ -231,7 +231,6 @@ bool Invader::isAboutToMove()
 
 void Invader::collidedWithBlock()
 {
-
 	moving_state = STILL;
 	moving = false;
 	y_position = last_y_position;

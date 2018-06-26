@@ -11,6 +11,9 @@ private:
 	ID2D1Bitmap* bmp_full_life_bar = NULL;
 	ID2D1Bitmap* bmp_empty_life_bar = NULL;
 	ID2D1Bitmap* bmp_overlay = NULL;
+	ID2D1Bitmap* bmp_tip0 = NULL;
+	ID2D1Bitmap* bmp_tip1 = NULL;
+	ID2D1Bitmap* bmp_tip2 = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrushForFloor = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrushForVerticalWall = NULL;
 	ID2D1BitmapBrush* m_pBitmapBrushForTransverseWall = NULL;
@@ -18,7 +21,6 @@ private:
 	SimpleCollision* collision = NULL;
 	std::vector<Block*> blocks;
 	Invader* enemy = NULL;
-	Intruder* intruder = NULL;
 	FileReader* file_reader = NULL;
 	std::vector<float>* beats = NULL;
 	std::vector<Actor*> actors; //vector of collision and rendering
