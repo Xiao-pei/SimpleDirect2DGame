@@ -32,6 +32,7 @@ private:
 	float x = 0.0f;
 	float y = 0.0f;
 	float time;
+	float wait_time = 0;
 	//folowing variables described "camera" position
 	float grid_x = 0;
 	float grid_y = 0;

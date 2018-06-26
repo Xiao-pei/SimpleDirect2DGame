@@ -11,7 +11,7 @@ private:
 	D2D_RECT_F frame[4];
 	D2D_RECT_F heart_frame[5];
 	int heart_frame_index;
-	D2D_RECT_F *heart_position;
+	D2D_RECT_F* heart_position;
 	ID2D1Bitmap* heart_full;
 	ID2D1Bitmap* heart_empty;
 	Audio* sound_player;

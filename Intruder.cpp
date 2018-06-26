@@ -200,11 +200,11 @@ void Intruder::OnRender(ID2D1HwndRenderTarget* pRenderTarget)
 			{
 				if (i < health)
 					pRenderTarget->DrawBitmap(heart_full, heart_position[i],
-						1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, heart_frame[heart_frame_index]
+					                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, heart_frame[heart_frame_index]
 					);
 				else
 					pRenderTarget->DrawBitmap(heart_empty, heart_position[i],
-						1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, heart_frame[heart_frame_index]
+					                          1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, heart_frame[heart_frame_index]
 					);
 			}
 	}
@@ -267,12 +267,13 @@ void Intruder::collidedWithActor()
 	moving = false;
 	y_position = last_y_position;
 	x_position = last_x_position;
+	sound_player->PlayMusic(L"sfxsound/chop.wav");
 }
 
 void Intruder::setPosition(int x, int y)
 {
-	x_position = TILE_WIDTH * x;
-	y_position = TILE_WIDTH * y;
+	x_position = TILE_WIDTH * x-1;
+	y_position = TILE_WIDTH * y-2;
 	last_x_position = x_position;
 	last_y_position = y_position;
 }
@@ -281,7 +282,11 @@ void Intruder::collidedWithBlock()
 {
 	collide_count++;
 	collided_direction = moving_state;
-	collidedWithActor();
+	moving_state = STILL;
+	moving_enable = false;
+	moving = false;
+	y_position = last_y_position;
+	x_position = last_x_position;
 }
 
 void Intruder::setTarget(Actor* actor)

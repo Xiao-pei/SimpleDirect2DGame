@@ -51,6 +51,12 @@ void StartScreen::Load()
 		bitmap_start = bitmap_loader_->getBitmap(L"start.png");
 	if (bitmap_overlay == NULL)
 		bitmap_overlay = bitmap_loader_->getBitmap(L"cover.png");
+	if (music == NULL)
+	{
+		music = new Audio();
+		music->PlayMusic(L"Nightcrawler.wav");
+		time = 0;
+	}
 }
 
 GameLevel* StartScreen::LoadNextLevel()

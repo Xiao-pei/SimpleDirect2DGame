@@ -55,7 +55,7 @@ void Level1::Load()
 	if (file_reader == NULL)
 		file_reader = new FileReader();
 	if (beats == NULL)
-		beats = file_reader->getBeats(L"MOON.txt");
+		beats = file_reader->getBeats(L"Tutorial.txt");
 	if (blocks_position == NULL)
 	{
 		blocks_position = file_reader->getMap(L"a.txt");
@@ -111,7 +111,7 @@ void Level1::Load()
 	if (music == NULL)
 	{
 		music = new Audio();
-		music->PlayMusic(L"MOON.wav");
+		music->PlayMusic(L"Tutorial.wav");
 		time = 0;
 	}
 
@@ -250,15 +250,15 @@ void Level1::Update(double delta)
 	}
 	for (int i = 0; i < actors.size(); i++)
 	{
-		if (abs(beats->at(beats_index) - time) < 0.13)
+		if (abs(beats->at(beats_index) - time) < 0.12)
 			actors[i]->setMovingEnable(true);
 		else { actors[i]->setMovingEnable(false); }
+		if (abs(beats->at(beats_index) - time) < 0.15)
+			main_character->setMovingEnable(true);//special benefit for character
 		actors[i]->Update(delta);
 	}
 	current_life_num = main_character->getLife();
-	//if (abs(beats->at(beats_index) - time) < 0.17)
-	//	main_character->setMovingEnable(true);//special benefit for character
-	if (beats->at(beats_index) + 0.18 < time)
+	if (beats->at(beats_index) + 0.16 < time)
 		if (beats_index + 1 < beats->size())
 			beats_index++;
 
@@ -302,8 +302,14 @@ void Level1::Update(double delta)
 		                                   life_bar_position[i - 1].top + bmp_full_life_bar->GetSize().height);
 	}
 
-	if ((actors.size() == 1 && actors[0] == main_character) || main_character->isDead())
-		load_next_level = true; //if level was clean, load next level
+	if (main_character->isDead())
+	{
+		wait_time += delta / 1000;
+		if (wait_time > 2.5)
+			load_next_level = true;
+	}
+	if (actors.size() == 1 && actors[0] == main_character)
+		load_next_level = true; //if level was clean or player was dead, load next level
 }
 
 GameLevel* Level1::LoadNextLevel()

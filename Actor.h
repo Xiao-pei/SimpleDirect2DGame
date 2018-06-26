@@ -15,6 +15,7 @@ protected:
 	bool dead;
 	bool moving;
 	bool moving_enable;
+	bool is_attacking;
 	ID2D1Bitmap* bmp;
 	ID2D1Bitmap* fliped_bmp;
 	BitmapLoader* bitmap_loader;

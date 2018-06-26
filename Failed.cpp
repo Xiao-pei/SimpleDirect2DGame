@@ -11,20 +11,24 @@ Failed::~Failed()
 
 void Failed::OnRender()
 {
+	m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(0, 0));
 	m_pRenderTarget->DrawBitmap(bitmap_failed, D2D1::RectF(0, 0,
-		bitmap_failed->GetSize().width, bitmap_failed->GetSize().height),
-		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1::RectF(0, 0,
-			bitmap_failed->GetSize().width,
-			bitmap_failed->GetSize().height));
+	                                                       bitmap_failed->GetSize().width,
+	                                                       bitmap_failed->GetSize().height),
+	                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1::RectF(0, 0,
+	                                                                                    bitmap_failed->GetSize().width,
+	                                                                                    bitmap_failed->GetSize().height));
 	m_pRenderTarget->DrawBitmap(bitmap_overlay,
-		D2D1::RectF(0, 0, bitmap_overlay->GetSize().width, bitmap_overlay->GetSize().height),
-		1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-		D2D1::RectF(0, 0, bitmap_overlay->GetSize().width, bitmap_overlay->GetSize().height));
+	                            D2D1::RectF(0, 0, bitmap_overlay->GetSize().width, bitmap_overlay->GetSize().height),
+	                            1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+	                            D2D1::RectF(0, 0, bitmap_overlay->GetSize().width, bitmap_overlay->GetSize().height));
 }
 
 void Failed::Update(double delta)
 {
 	time += delta / 1000;
+	if (time >= 4)
+		load_next_level = true;
 }
 
 void Failed::Load()

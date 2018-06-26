@@ -172,6 +172,7 @@
     <ClInclude Include="Success.h" />
     <ClInclude Include="TestLevel.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TutorialLevel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Success.cpp" />
     <ClCompile Include="Testlevel.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TutorialLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FurtherStudy.rc" />

@@ -1,11 +1,10 @@
 #pragma once
 #include "GameLevel.h"
-
-
-class Testlevel : public GameLevel
+class TutorialLevel :
+	public GameLevel
 {
 private:
-	ID2D1Bitmap* bmp_floor = NULL;
+	ID2D1Bitmap * bmp_floor = NULL;
 	ID2D1Bitmap* bmp_vertical_wall = NULL;
 	ID2D1Bitmap* bmp_vertical_wall_top = NULL;
 	ID2D1Bitmap* bmp_transverse_wall = NULL;
@@ -37,18 +36,17 @@ private:
 	int full_life_num = 0;
 	int current_life_num = 0;
 	std::vector<int>* blocks_position = NULL;
-
 public:
-	Testlevel(ID2D1HwndRenderTarget* rt)
+	TutorialLevel(ID2D1HwndRenderTarget* rt)
 	{
 		load_next_level = false;
 		m_pRenderTarget = rt;
 		bitmap_loader_ = new BitmapLoader(m_pRenderTarget);
 	}
-
-	~Testlevel();
+	~TutorialLevel();
 	void Load() override;
 	void OnRender() override;
 	void Update(double delta) override;
 	GameLevel* LoadNextLevel() override;
 };
+
